@@ -132,42 +132,47 @@ camera.lookAt(-2, 0, 0);
 let time = 0;
 let scrollY = 0;
 
-// Create debug panel
-const debugPanel = document.createElement('div');
-debugPanel.id = 'debug-panel';
-debugPanel.style.cssText = `
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.9);
-    color: #00ff00;
-    padding: 15px;
-    font-family: monospace;
-    font-size: 12px;
-    z-index: 99999;
-    border: 1px solid #00ff00;
-    min-width: 350px;
-    line-height: 1.6;
-    max-height: 80vh;
-    overflow-y: auto;
-    pointer-events: all !important;
-    user-select: text;
-`;
-document.body.appendChild(debugPanel);
+// Create debug panel (disabled)
+const DEBUG_MODE = false;
 
-// Add CSS to ensure inputs and buttons work
-const style = document.createElement('style');
-style.textContent = `
-    #debug-panel * {
+let debugPanel;
+if (DEBUG_MODE) {
+    debugPanel = document.createElement('div');
+    debugPanel.id = 'debug-panel';
+    debugPanel.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.9);
+        color: #00ff00;
+        padding: 15px;
+        font-family: monospace;
+        font-size: 12px;
+        z-index: 99999;
+        border: 1px solid #00ff00;
+        min-width: 350px;
+        line-height: 1.6;
+        max-height: 80vh;
+        overflow-y: auto;
         pointer-events: all !important;
-        user-select: text !important;
-    }
-    #debug-panel input,
-    #debug-panel button {
-        cursor: pointer !important;
-    }
-`;
-document.head.appendChild(style);
+        user-select: text;
+    `;
+    document.body.appendChild(debugPanel);
+
+    // Add CSS to ensure inputs and buttons work
+    const style = document.createElement('style');
+    style.textContent = `
+        #debug-panel * {
+            pointer-events: all !important;
+            user-select: text !important;
+        }
+        #debug-panel input,
+        #debug-panel button {
+            cursor: pointer !important;
+        }
+    `;
+    document.head.appendChild(style);
+}
 
 // Store manual overrides for current section
 let manualOverrides = {};
@@ -177,11 +182,11 @@ let isInteracting = false;
 // Define scroll-based positions for each section
 const scrollPositions = [
     { y: window.innerHeight * 0.0, position: { x: -2, y: 5, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
-    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 2.6 }, scale: { x: 40, y: 40, z: 40 } },
+    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 2.6 }, scale: { x: 35, y: 35, z: 35 } },
     { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: 3.14, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
     { y: window.innerHeight * 2.4, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
     { y: window.innerHeight * 3.32, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
-    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: -0.2, y: -0.4, z: 0.1 }, scale: { x: 20, y: 20, z: 20 } }
+    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: -0.2, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
 ];
 
 // Function to initialize debug panel controls
@@ -261,6 +266,8 @@ function initializeDebugPanel(currentSection) {
 
 // Function to update debug panel (only updates dynamic values)
 function updateDebugPanel(interpolated, scrollY) {
+    if (!DEBUG_MODE) return;
+
     const currentSection = getCurrentSection(scrollY);
 
     // Only rebuild the panel if section changed
