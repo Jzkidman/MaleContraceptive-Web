@@ -26,26 +26,85 @@
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
             width: 100%;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 20px 0;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 60px 10vw;
             background: transparent;
             z-index: 100;
+            box-sizing: border-box;
         }
 
         nav a {
             color: #ffffff;
             text-decoration: none;
             font-weight: bold;
-            font-size: 14px;
-            letter-spacing: 1px;
+            font-size: clamp(18px, 2vw, 32px);
+            letter-spacing: 2px;
             transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        nav .nav-left {
+            display: flex;
+            gap: clamp(40px, 8vw, 120px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        nav .nav-right {
+            display: flex;
+            gap: clamp(30px, 5vw, 80px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
         }
 
         nav a:hover {
             color: #00d9ff;
+        }
+
+        .title {
+            position: fixed;
+            top: 75vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 50;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .title p {
+            font-size: clamp(48px, 8vw, 120px);
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.1;
+            text-shadow: none;
+            text-align: center;
+        }
+
+        .title .word {
+            display: inline-block;
+            margin: 0 0.2em;
+        }
+
+        /* Header pill bottle */
+        .header-pill-container {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%) rotate(180deg);
+            z-index: 99;
+            pointer-events: none;
+        }
+
+        .header-pill-container img {
+            height: 350px;
+            width: auto;
+            display: block;
         }
 
         #canvas-container {
@@ -85,6 +144,32 @@
             scroll-snap-stop: always;
             position: relative;
         }
+
+        /* Home section specific styles */
+        #home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #home .home-content {
+            transform: rotate(30deg);
+            max-width: 600px;
+            margin-top: 100px;
+        }
+
+        #home .section-header {
+            margin-bottom: 30px;
+        }
+
+        #home .text-content {
+            text-align: left;
+        }
+
+        #home .text-content p {
+            margin-bottom: 20px;
+        }
+
 
         .section-header {
             background: #ffffff;
@@ -301,11 +386,19 @@
     </style>
 </head>
 <body>
+    <div class="header-pill-container">
+        <img src="img/pillbottle.png" alt="Pill Bottle">
+    </div>
+
     <nav>
-        <a href="#home">HOME</a>
-        <a href="#facts">THE FACTS</a>
-        <a href="#change">CHANGE</a>
-        <a href="#future">THE FUTURE</a>
+        <div class="nav-left">   
+            <a href="#home">HOME</a>
+            <a href="#facts">THE FACTS</a>
+        </div>
+        <div class="nav-right">   
+            <a href="#change">CHANGE</a>
+            <a href="#future">THE FUTURE</a>
+        </div>
     </nav>
 
     <div id="canvas-container">
@@ -313,16 +406,19 @@
     </div>
 
     <div id="content">
+
+        <div class="title">
+            <p>THE MALE BIRTH</p>
+            <p>CONTROL PILL</p>
+        </div>
+
         <section class="section" id="home">
             <div class="section-header">1. WHAT IS THE MALE BIRTH CONTROL PILL?</div>
-            <div class="content-wrapper">
+            <div class="home-content">
                 <div class="text-content">
                     <p>A new hormone-free male contraceptive pill, YCT-529, has passed early human safety trials with no reported side effects and works by blocking a vitamin A receptor essential for sperm production.</p>
+                    <br><br>
                     <p>The pill has been making headlines and has sparked controversial topics about the pill itself as previous trials had been discontinued due to "side effect being adverse", many of which are common to the female contraceptive pill.</p>
-                    <p>This infographic collates the information gathered from an even split of male and female participants.</p>
-                </div>
-                <div class="pill-visual">
-                    <!-- 3D pill visual will appear here via Three.js -->
                 </div>
             </div>
         </section>
@@ -375,7 +471,7 @@
                 <!-- 3D pill visual will appear here via Three.js -->
             </div>
             <div class="why-not">
-                WHY<br>
+                WHY<br><br>
                 NOT?
             </div>
             <div class="learn-more">Learn more below</div>

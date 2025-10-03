@@ -1,6 +1,32 @@
 // GSAP ScrollTrigger animations for sections
 gsap.registerPlugin(ScrollTrigger);
 
+// Split text into words manually
+function splitTextIntoWords(element) {
+    const text = element.textContent;
+    const words = text.trim().split(/\s+/);
+    element.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
+}
+
+// Split title text into words
+document.addEventListener('DOMContentLoaded', () => {
+    const titleParagraphs = document.querySelectorAll('.title p');
+    titleParagraphs.forEach(p => splitTextIntoWords(p));
+
+    // Animate title fade out word by word
+    gsap.to('.title .word', {
+        opacity: 0,
+        y: -100,
+        scrollTrigger: {
+            trigger: '#content',
+            start: 'top top',
+            end: 'top -200px',
+            scrub: 1,
+            markers: false
+        }
+    });
+});
+
 // Animate each section
 const sections = gsap.utils.toArray('.section');
 
@@ -37,7 +63,7 @@ sections.forEach((section, index) => {
             opacity: 1,
             y: 0,
             duration: 0.8,
-            stagger: 0.1,
+            stagger: 0.05,
             ease: "power2.out",
             scrollTrigger: {
                 trigger: section,

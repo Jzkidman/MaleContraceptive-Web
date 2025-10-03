@@ -52,36 +52,29 @@ scene.add(rimLight);
 
 // Variables for animation
 let pillModel = null;
+let redPillModel = null;
+let whitePillModel = null;
+let redPillData = null;
+let whitePillData = null;
 let mixer = null;
 const clock = new THREE.Clock();
 
-// Load GLTF model
-const loader = new THREE.GLTFLoader();
-loader.load('./Assets/blueRound.gltf', function(gltf) {
-    pillModel = gltf.scene;
-
-    // Scale and position the model
-    pillModel.scale.set(20, 20, 20);
-    pillModel.position.set(-2, 0, 0);
-
-    // Enable shadows and fix normals
-    pillModel.traverse(function(child) {
+// Helper function to setup pill materials
+function setupPillMaterial(model) {
+    model.traverse(function(child) {
         if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
 
             // Fix polygon shading issues
             if (child.geometry) {
-                // Compute smooth normals for better shading
                 child.geometry.computeVertexNormals();
             }
 
             // Improve material properties for better shading
             if (child.material) {
-                // Clone material to avoid affecting other objects
                 child.material = child.material.clone();
-
-                child.material.side = THREE.FrontSide; // Use FrontSide instead of DoubleSide
+                child.material.side = THREE.FrontSide;
                 child.material.flatShading = false;
                 child.material.metalness = 0.2;
                 child.material.roughness = 0.3;
@@ -98,7 +91,7 @@ loader.load('./Assets/blueRound.gltf', function(gltf) {
                 if (child.material.normalMap) {
                     child.material.normalMap.minFilter = THREE.LinearMipmapLinearFilter;
                     child.material.normalMap.magFilter = THREE.LinearFilter;
-                    child.material.normalScale.set(0.5, 0.5); // Reduce normal intensity
+                    child.material.normalScale.set(0.5, 0.5);
                 }
 
                 // Ensure proper vertex colors if they exist
@@ -110,18 +103,57 @@ loader.load('./Assets/blueRound.gltf', function(gltf) {
             }
         }
     });
+}
 
+// Load GLTF model
+const loader = new THREE.GLTFLoader();
+
+// Load blue pill
+loader.load('./assets/blueRound.gltf', function(gltf) {
+    pillModel = gltf.scene;
+    pillModel.scale.set(20, 20, 20);
+    pillModel.position.set(-2, 0, 0);
+    setupPillMaterial(pillModel);
     scene.add(pillModel);
-
-    // Hide loading text
     document.getElementById('loading').style.display = 'none';
-
-    console.log('Model loaded successfully');
+    console.log('Blue pill loaded successfully');
 }, function(progress) {
-    console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+    console.log('Blue pill loading progress:', (progress.loaded / progress.total * 100) + '%');
 }, function(error) {
-    console.error('Error loading model:', error);
+    console.error('Error loading blue pill:', error);
     document.getElementById('loading').textContent = 'Error loading 3D model';
+});
+
+// Load red pill
+loader.load('./assets/RedLong.gltf', function(gltf) {
+    redPillData = gltf.scene.clone();
+    redPillModel = gltf.scene;
+    redPillModel.scale.set(5, 5, 5);
+    redPillModel.position.set(-8, 1, 0);
+    redPillModel.rotation.set(0, 0, -0.5);
+    setupPillMaterial(redPillModel);
+    scene.add(redPillModel);
+    console.log('Red pill loaded successfully');
+}, function(progress) {
+    console.log('Red pill loading progress:', (progress.loaded / progress.total * 100) + '%');
+}, function(error) {
+    console.error('Error loading red pill:', error);
+});
+
+// Load white pill
+loader.load('./assets/longWhite.gltf', function(gltf) {
+    whitePillData = gltf.scene.clone();
+    whitePillModel = gltf.scene;
+    whitePillModel.scale.set(5, 5, 5);
+    whitePillModel.position.set(4, 1, 0);
+    whitePillModel.rotation.set(0, 0, 0.5);
+    setupPillMaterial(whitePillModel);
+    scene.add(whitePillModel);
+    console.log('White pill loaded successfully');
+}, function(progress) {
+    console.log('White pill loading progress:', (progress.loaded / progress.total * 100) + '%');
+}, function(error) {
+    console.error('Error loading white pill:', error);
 });
 
 // Camera position
@@ -181,12 +213,23 @@ let isInteracting = false;
 
 // Define scroll-based positions for each section
 const scrollPositions = [
-    { y: window.innerHeight * 0.0, position: { x: -2, y: 5, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
+    { y: window.innerHeight * 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
     { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 2.6 }, scale: { x: 35, y: 35, z: 35 } },
-    { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: 3.14, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
+    { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
     { y: window.innerHeight * 2.4, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
     { y: window.innerHeight * 3.32, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
-    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: -0.2, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
+    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
+];
+
+// Define scroll-based positions for red and white pills
+const redPillPositions = [
+    { y: window.innerHeight * 0.0, position: { x: -4, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: -0.5 }, scale: { x: 5.5, y: 5.5, z: 5.5 } },
+    { y: window.innerHeight * 0.35, position: { x: -25, y: 4, z: 0 }, rotation: { x: -1, y: -2, z: -2.5 }, scale: { x: 3, y: 3, z: 3 } }
+];
+
+const whitePillPositions = [
+    { y: window.innerHeight * 0.0, position: { x: 0, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: 0.5 }, scale: { x: 6, y: 6, z: 6 } },
+    { y: window.innerHeight * 0.35, position: { x: 10, y: 4, z: 0 }, rotation: { x: 1, y: 2, z: 2.5 }, scale: { x: 3, y: 3, z: 3 } }
 ];
 
 // Function to initialize debug panel controls
@@ -405,6 +448,88 @@ function animate() {
         rimLight.position.x = pillModel.position.x;
         rimLight.position.y = pillModel.position.y;
         rimLight.position.z = pillModel.position.z - 8;
+
+        // Sync home-content with pill wobble and movement
+        const homeContent = document.querySelector('#home .home-content');
+        if (homeContent && scrollY < window.innerHeight * 0.35) {
+            const wobbleX = Math.cos(time * 1) * 0.1;
+            const wobbleY = Math.sin(time * 1.5) * 0.15;
+            const currentScale = interpolated.scale.x * breathingScale / 20; // Normalize scale
+
+            homeContent.style.transform = `
+                rotate(30deg)
+                translate(${wobbleX * 50}px, ${wobbleY * 50}px)
+                scale(${currentScale})
+            `;
+        }
+    }
+
+    // Animate red pill based on scroll
+    if (scrollY < redPillPositions[1].y) {
+        // Re-add if scrolled back to top
+        if (!redPillModel && redPillData) {
+            redPillModel = redPillData.clone();
+            setupPillMaterial(redPillModel);
+            scene.add(redPillModel);
+        }
+
+        if (redPillModel) {
+            const current = redPillPositions[0];
+            const next = redPillPositions[1];
+            const progress = scrollY / next.y;
+            const smoothProgress = Math.min(Math.max(progress, 0), 1);
+            const eased = smoothProgress * smoothProgress * (3 - 2 * smoothProgress);
+
+            redPillModel.position.x = lerp(current.position.x, next.position.x, eased) + Math.cos(time * 1.5) * 0.15;
+            redPillModel.position.y = lerp(current.position.y, next.position.y, eased) + Math.sin(time * 2) * 0.2;
+            redPillModel.position.z = lerp(current.position.z, next.position.z, eased);
+
+            redPillModel.rotation.x = lerp(current.rotation.x, next.rotation.x, eased) + Math.sin(time * 0.5) * 0.05;
+            redPillModel.rotation.y = lerp(current.rotation.y, next.rotation.y, eased) + Math.cos(time * 0.8) * 0.05;
+            redPillModel.rotation.z = lerp(current.rotation.z, next.rotation.z, eased) + Math.sin(time * 1.2) * 0.1;
+
+            redPillModel.scale.x = lerp(current.scale.x, next.scale.x, eased);
+            redPillModel.scale.y = lerp(current.scale.y, next.scale.y, eased);
+            redPillModel.scale.z = lerp(current.scale.z, next.scale.z, eased);
+        }
+    } else if (redPillModel) {
+        // De-render when fully off screen
+        scene.remove(redPillModel);
+        redPillModel = null;
+    }
+
+    // Animate white pill based on scroll
+    if (scrollY < whitePillPositions[1].y) {
+        // Re-add if scrolled back to top
+        if (!whitePillModel && whitePillData) {
+            whitePillModel = whitePillData.clone();
+            setupPillMaterial(whitePillModel);
+            scene.add(whitePillModel);
+        }
+
+        if (whitePillModel) {
+            const current = whitePillPositions[0];
+            const next = whitePillPositions[1];
+            const progress = scrollY / next.y;
+            const smoothProgress = Math.min(Math.max(progress, 0), 1);
+            const eased = smoothProgress * smoothProgress * (3 - 2 * smoothProgress);
+
+            whitePillModel.position.x = lerp(current.position.x, next.position.x, eased) + Math.cos(time * 1.3) * 0.15;
+            whitePillModel.position.y = lerp(current.position.y, next.position.y, eased) + Math.sin(time * 1.8) * 0.2;
+            whitePillModel.position.z = lerp(current.position.z, next.position.z, eased);
+
+            whitePillModel.rotation.x = lerp(current.rotation.x, next.rotation.x, eased) + Math.sin(time * 0.5) * 0.05;
+            whitePillModel.rotation.y = lerp(current.rotation.y, next.rotation.y, eased) + Math.cos(time * 0.8) * 0.05;
+            whitePillModel.rotation.z = lerp(current.rotation.z, next.rotation.z, eased) + Math.sin(time * 1.1) * 0.1;
+
+            whitePillModel.scale.x = lerp(current.scale.x, next.scale.x, eased);
+            whitePillModel.scale.y = lerp(current.scale.y, next.scale.y, eased);
+            whitePillModel.scale.z = lerp(current.scale.z, next.scale.z, eased);
+        }
+    } else if (whitePillModel) {
+        // De-render when fully off screen
+        scene.remove(whitePillModel);
+        whitePillModel = null;
     }
 
     renderer.render(scene, camera);
