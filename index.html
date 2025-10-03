@@ -281,24 +281,24 @@
             text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
         }
 
-        .final-section .learn-more {
+        .learn-more {
             font-size: 16px;
             color: #ffffff;
             margin-top: 80px;
+            margin-bottom: 50px;
             padding-bottom: 20px;
             border-bottom: 1px solid #ffffff;
+            text-align: center;
+
         }
 
         /* Footer Navigation */
         footer {
             position: relative;
             width: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 20px 0;
             background: transparent;
             z-index: 100;
+            margin-top: 100px;
         }
 
         footer a {
@@ -312,6 +312,17 @@
 
         footer a:hover {
             color: #00d9ff;
+        }
+
+        footer .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: transparent;
+            z-index: 100;
         }
 
         .stat-item {
@@ -455,15 +466,18 @@
                 WHY<br><br>
                 NOT?
             </div>
-            <div class="learn-more">Learn more below</div>
         </section>
     </div>
 
     <footer>
-        <a href="#home">HOME</a>
-        <a href="#facts">THE FACTS</a>
-        <a href="#change">CHANGE</a>
-        <a href="#future">THE FUTURE</a>
+        <div class="learn-more">Learn more below</div>
+
+        <div class="links">
+            <a href="#home">HOME</a>
+            <a href="#facts">THE FACTS</a>
+            <a href="#change">CHANGE</a>
+            <a href="#future">THE FUTURE</a>
+        </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

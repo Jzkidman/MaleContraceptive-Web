@@ -106,7 +106,7 @@ sections.forEach((section, index) => {
         );
 
         // Animate child elements with stagger
-        const children = section.querySelectorAll('h1, h2, h3, p, .highlight, .stats');
+        const children = section.querySelectorAll('h1, h2, h3, p, .highlight, .stats, .so-text');
         gsap.fromTo(children,
             {
                 opacity: 0,
@@ -128,4 +128,42 @@ sections.forEach((section, index) => {
             }
         );
     }
+});
+
+// Animate "WHY NOT?" specifically
+const whyNotElement = document.querySelector('.why-not');
+if (whyNotElement) {
+    gsap.fromTo(whyNotElement,
+        {
+            opacity: 0,
+            scale: 0.5,
+            y: 50
+        },
+        {
+            opacity: 1,
+            scale: 1.75,
+            y: 0,
+            duration: 1.5,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: whyNotElement,
+                start: "top 70%",
+                end: "bottom 50%",
+                toggleActions: "play reverse play reverse",
+                markers: true
+            }
+        }
+    );
+}
+
+// Handle window resize - refresh ScrollTrigger
+window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+});
+
+// Refresh ScrollTrigger after 3D models load
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 1000);
 });

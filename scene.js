@@ -640,6 +640,25 @@ window.addEventListener('resize', function() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Update scroll positions based on new window height
+    scrollPositions[0].y = window.innerHeight * 0.0;
+    scrollPositions[1].y = window.innerHeight * 0.35;
+    scrollPositions[2].y = window.innerHeight * 1.32;
+    scrollPositions[3].y = window.innerHeight * 2.4;
+    scrollPositions[4].y = window.innerHeight * 3.32;
+    scrollPositions[5].y = window.innerHeight * 3.85;
+
+    redPillPositions[0].y = window.innerHeight * 0.0;
+    redPillPositions[1].y = window.innerHeight * 0.35;
+
+    whitePillPositions[0].y = window.innerHeight * 0.0;
+    whitePillPositions[1].y = window.innerHeight * 0.35;
+
+    // Refresh GSAP ScrollTrigger if available
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+    }
 });
 
 // Start animation
