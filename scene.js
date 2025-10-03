@@ -132,15 +132,179 @@ camera.lookAt(-2, 0, 0);
 let time = 0;
 let scrollY = 0;
 
+// Create debug panel
+const debugPanel = document.createElement('div');
+debugPanel.id = 'debug-panel';
+debugPanel.style.cssText = `
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #00ff00;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 99999;
+    border: 1px solid #00ff00;
+    min-width: 350px;
+    line-height: 1.6;
+    max-height: 80vh;
+    overflow-y: auto;
+    pointer-events: all !important;
+    user-select: text;
+`;
+document.body.appendChild(debugPanel);
+
+// Add CSS to ensure inputs and buttons work
+const style = document.createElement('style');
+style.textContent = `
+    #debug-panel * {
+        pointer-events: all !important;
+        user-select: text !important;
+    }
+    #debug-panel input,
+    #debug-panel button {
+        cursor: pointer !important;
+    }
+`;
+document.head.appendChild(style);
+
+// Store manual overrides for current section
+let manualOverrides = {};
+let lastSection = -1;
+let isInteracting = false;
+
 // Define scroll-based positions for each section
 const scrollPositions = [
-    { y: 0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 1 }, scale: { x: 50, y: 50, z: 50 } },
-    { y: window.innerHeight * 0.2, position: { x: -1, y: -1, z: 0 }, rotation: { x: 0, y: 0, z: 1 }, scale: { x: 45, y: 45, z: 45 } },
-    { y: window.innerHeight * 0.8, position: { x: -1, y: 2, z: -1 }, rotation: { x: Math.PI * 0.5, y: Math.PI * 0.3, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
-    { y: window.innerHeight * 1.6, position: { x: -3, y: 0, z: 1 }, rotation: { x: Math.PI, y: Math.PI * 0.8, z: Math.PI * 0.2 }, scale: { x: 15, y: 15, z: 15 } },
-    { y: window.innerHeight * 2.4, position: { x: -1.5, y: -1, z: 0 }, rotation: { x: Math.PI * 1.5, y: Math.PI * 1.2, z: Math.PI * 0.5 }, scale: { x: 45, y: 45, z: 45 } },
-    { y: window.innerHeight * 3.2, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: Math.PI * 2, y: Math.PI * 1.8, z: Math.PI * 0.8 }, scale: { x: 25, y: 25, z: 25 } }
+    { y: window.innerHeight * 0.0, position: { x: -2, y: 5, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
+    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 2.6 }, scale: { x: 40, y: 40, z: 40 } },
+    { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: 3.14, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
+    { y: window.innerHeight * 2.4, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
+    { y: window.innerHeight * 3.32, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
+    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: -0.2, y: -0.4, z: 0.1 }, scale: { x: 20, y: 20, z: 20 } }
 ];
+
+// Function to initialize debug panel controls
+function initializeDebugPanel(currentSection) {
+    const sectionMultiplier = scrollPositions[currentSection] ? (scrollPositions[currentSection].y / window.innerHeight).toFixed(1) : 0;
+    const override = manualOverrides[currentSection] || scrollPositions[currentSection];
+
+    debugPanel.innerHTML = `
+        <strong>PILL 3D DEBUG</strong><br>
+        ───────────────────────<br>
+        <div id="debug-info"></div>
+        ───────────────────────<br>
+        <div id="debug-live"></div>
+        ───────────────────────<br>
+        <strong>Edit Section ${currentSection}:</strong><br>
+        <div style="margin: 5px 0;">
+            <strong>Position:</strong><br>
+            x: <input type="number" id="pos-x" value="${override.position.x}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+            y: <input type="number" id="pos-y" value="${override.position.y}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+            z: <input type="number" id="pos-z" value="${override.position.z}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+        </div>
+        <div style="margin: 5px 0;">
+            <strong>Rotation:</strong><br>
+            x: <input type="number" id="rot-x" value="${override.rotation.x.toFixed(2)}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+            y: <input type="number" id="rot-y" value="${override.rotation.y.toFixed(2)}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+            z: <input type="number" id="rot-z" value="${override.rotation.z.toFixed(2)}" step="0.1" style="width: 60px; color: #000; padding: 2px;">
+        </div>
+        <div style="margin: 5px 0;">
+            <strong>Scale:</strong><br>
+            x: <input type="number" id="scale-x" value="${override.scale.x}" step="1" style="width: 60px; color: #000; padding: 2px;">
+            y: <input type="number" id="scale-y" value="${override.scale.y}" step="1" style="width: 60px; color: #000; padding: 2px;">
+            z: <input type="number" id="scale-z" value="${override.scale.z}" step="1" style="width: 60px; color: #000; padding: 2px;">
+        </div>
+        <button id="apply-changes" style="margin-top: 10px; padding: 5px 10px; background: #00ff00; color: #000; border: none; cursor: pointer; font-weight: bold;">Apply Changes</button>
+        <button id="reset-section" style="margin-top: 10px; padding: 5px 10px; background: #ff0000; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-left: 5px;">Reset</button>
+        <button id="copy-values" style="margin-top: 10px; padding: 5px 10px; background: #0088ff; color: #fff; border: none; cursor: pointer; font-weight: bold; margin-left: 5px;">Copy Code</button>
+    `;
+
+    // Add event listeners once
+    document.getElementById('apply-changes').addEventListener('click', () => {
+        const newOverride = {
+            y: scrollPositions[currentSection].y,
+            position: {
+                x: parseFloat(document.getElementById('pos-x').value),
+                y: parseFloat(document.getElementById('pos-y').value),
+                z: parseFloat(document.getElementById('pos-z').value)
+            },
+            rotation: {
+                x: parseFloat(document.getElementById('rot-x').value),
+                y: parseFloat(document.getElementById('rot-y').value),
+                z: parseFloat(document.getElementById('rot-z').value)
+            },
+            scale: {
+                x: parseFloat(document.getElementById('scale-x').value),
+                y: parseFloat(document.getElementById('scale-y').value),
+                z: parseFloat(document.getElementById('scale-z').value)
+            }
+        };
+        manualOverrides[currentSection] = newOverride;
+        scrollPositions[currentSection] = newOverride;
+        console.log('Applied changes to section', currentSection, newOverride);
+    });
+
+    document.getElementById('reset-section').addEventListener('click', () => {
+        delete manualOverrides[currentSection];
+        location.reload();
+    });
+
+    document.getElementById('copy-values').addEventListener('click', () => {
+        const code = `{ y: window.innerHeight * ${sectionMultiplier}, position: { x: ${override.position.x}, y: ${override.position.y}, z: ${override.position.z} }, rotation: { x: ${override.rotation.x.toFixed(2)}, y: ${override.rotation.y.toFixed(2)}, z: ${override.rotation.z.toFixed(2)} }, scale: { x: ${override.scale.x}, y: ${override.scale.y}, z: ${override.scale.z} } }`;
+        navigator.clipboard.writeText(code);
+        alert('Code copied to clipboard!');
+    });
+
+    lastSection = currentSection;
+}
+
+// Function to update debug panel (only updates dynamic values)
+function updateDebugPanel(interpolated, scrollY) {
+    const currentSection = getCurrentSection(scrollY);
+
+    // Only rebuild the panel if section changed
+    if (currentSection !== lastSection) {
+        initializeDebugPanel(currentSection);
+    }
+
+    const sectionMultiplier = scrollPositions[currentSection] ? (scrollPositions[currentSection].y / window.innerHeight).toFixed(1) : 0;
+    const currentScrollMultiplier = (scrollY / window.innerHeight).toFixed(2);
+
+    // Update only the dynamic info
+    const infoDiv = document.getElementById('debug-info');
+    if (infoDiv) {
+        infoDiv.innerHTML = `
+            Scroll Y: ${scrollY.toFixed(0)}px<br>
+            Current Scroll Multiplier: ${currentScrollMultiplier}x<br>
+            Current Section: ${currentSection}<br>
+            Section Multiplier: ${sectionMultiplier}x<br>
+            Window Height: ${window.innerHeight}px
+        `;
+    }
+
+    const liveDiv = document.getElementById('debug-live');
+    if (liveDiv) {
+        liveDiv.innerHTML = `
+            <strong>Live Values:</strong><br>
+            Position: (${interpolated.position.x.toFixed(2)}, ${interpolated.position.y.toFixed(2)}, ${interpolated.position.z.toFixed(2)})<br>
+            Rotation: (${interpolated.rotation.x.toFixed(2)}, ${interpolated.rotation.y.toFixed(2)}, ${interpolated.rotation.z.toFixed(2)})<br>
+            Scale: (${interpolated.scale.x.toFixed(2)}, ${interpolated.scale.y.toFixed(2)}, ${interpolated.scale.z.toFixed(2)})
+        `;
+    }
+}
+
+// Helper function to get current section
+function getCurrentSection(scrollY) {
+    let currentSection = 0;
+    for (let i = scrollPositions.length - 1; i >= 0; i--) {
+        if (scrollY >= scrollPositions[i].y) {
+            currentSection = i;
+            break;
+        }
+    }
+    return currentSection;
+}
 
 // Scroll event listener
 window.addEventListener('scroll', function() {
@@ -206,6 +370,9 @@ function animate() {
     if (pillModel) {
         // Get interpolated values based on scroll
         const interpolated = getInterpolatedValues(scrollY);
+
+        // Update debug panel
+        updateDebugPanel(interpolated, scrollY);
 
         // Apply scroll-based position and rotation
         pillModel.position.x = interpolated.position.x + Math.cos(time * 1) * 0.1;

@@ -21,6 +21,33 @@
             scroll-behavior: smooth;
         }
 
+        /* Navigation */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: transparent;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #00d9ff;
+        }
+
         #canvas-container {
             position: fixed;
             top: 0;
@@ -28,6 +55,11 @@
             width: 100vw;
             height: 100vh;
             z-index: 1;
+            pointer-events: none;
+        }
+
+        #canvas-container canvas {
+            pointer-events: none;
         }
 
         #content {
@@ -36,43 +68,62 @@
             z-index: 10;
             background: transparent;
             padding: 0;
+            pointer-events: auto;
         }
 
         .section {
-            padding: 80px 60px;
+            padding: 120px 60px 60px 60px;
             min-height: 100vh;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            max-width: 800px;
+            align-items: flex-start;
+            max-width: 1400px;
             margin: 0 auto;
             scroll-snap-align: start;
             scroll-snap-stop: always;
+            position: relative;
         }
 
-        h1 {
-            font-size: 48px;
-            margin-bottom: 30px;
+        .section-header {
+            background: #ffffff;
             color: #000000;
+            padding: 8px 15px;
+            font-size: 14px;
             font-weight: bold;
-            border: 3px solid #ffffff;
-            padding: 5px 10px;
-            display: inline-block;
-            background: rgb(255, 255, 255);
-            backdrop-filter: blur(5px);
+            letter-spacing: 0.5px;
+            margin-bottom: 40px;
+            align-self: flex-start;
         }
 
-        h2 {
-            font-size: 48px;
+        .content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 60px;
+        }
+
+        .text-content {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .pill-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        h1, h2 {
+            font-size: 18px;
             margin-bottom: 30px;
-            color: #000000;
-            font-weight: bold;
-            border: 3px solid #ffffff;
-            padding: 5px 10px;
-            display: inline-block;
-            background: rgb(255, 255, 255);
-            backdrop-filter: blur(5px);
+            color: #ffffff;
+            font-weight: normal;
+            line-height: 1.8;
         }
 
         h3 {
@@ -92,44 +143,122 @@
         }
 
         .highlight {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 15px;
+            background: transparent;
+            padding: 0;
             margin: 30px 0;
-            border-left: 5px solid #00ff88;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .highlight h3 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
         }
 
         .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin: 0;
+        }
+
+        .quote-text {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 30px 0;
+        }
+
+        /* Final Section - Why Not */
+        .final-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .final-section .so-text {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 60px;
+            letter-spacing: 8px;
+        }
+
+        .final-section .why-not {
+            font-size: 120px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 1;
             margin: 40px 0;
+        }
+
+        .final-section .learn-more {
+            font-size: 16px;
+            color: #ffffff;
+            margin-top: 80px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        /* Footer Navigation */
+        footer {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: transparent;
+            z-index: 100;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #00d9ff;
         }
 
         .stat-item {
             text-align: center;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
         }
 
         .stat-number {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: bold;
-            color: #00ff88;
+            color: #000000;
             display: block;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
         }
 
         .stat-label {
-            font-size: 16px;
-            color: #ffffff;
-            margin-top: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            font-size: 13px;
+            color: #000000;
+            line-height: 1.4;
+        }
+
+        .stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         #loading {
@@ -172,88 +301,93 @@
     </style>
 </head>
 <body>
+    <nav>
+        <a href="#home">HOME</a>
+        <a href="#facts">THE FACTS</a>
+        <a href="#change">CHANGE</a>
+        <a href="#future">THE FUTURE</a>
+    </nav>
+
     <div id="canvas-container">
         <div id="loading">Loading 3D model...</div>
     </div>
 
     <div id="content">
-        <section class="section">
-            <h1>1. WHAT IS THE MALE BIRTH CONTROL PILL?</h1>
-            <p>A new hormone-free male contraceptive pill, YCT-529, has passed early human safety trials with no reported side effects and works by blocking a vitamin A receptor essential for sperm production.</p>
-            <p>The pill has been making headlines and has sparked controversial topics about the pill itself as previous trials had been discontinued due to "side effect being adverse", many of which are common to the female contraceptive pill.</p>
-            <p>This infographic collates the information gathered from an even split of male and female participants.</p>
-        </section>
-
-        <section class="section">
-            <h2>2. TRUST & RELIABILITY</h2>
-            <p>Side effects may include severe trust deficits, with average trust levels plateauing at only 23.15% for male contraceptive responsibility (focus on remembering daily consumption).</p>
-
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number">73%</span>
-                    <div class="stat-label">Showing minimal confidence (≤30%) in male contraceptive compliance</div>
+        <section class="section" id="home">
+            <div class="section-header">1. WHAT IS THE MALE BIRTH CONTROL PILL?</div>
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <p>A new hormone-free male contraceptive pill, YCT-529, has passed early human safety trials with no reported side effects and works by blocking a vitamin A receptor essential for sperm production.</p>
+                    <p>The pill has been making headlines and has sparked controversial topics about the pill itself as previous trials had been discontinued due to "side effect being adverse", many of which are common to the female contraceptive pill.</p>
+                    <p>This infographic collates the information gathered from an even split of male and female participants.</p>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number">76%</span>
-                    <div class="stat-label">Of female participants express concerns about men forgetting or not taking daily medication seriously</div>
-                </div>
-            </div>
-
-            <p>Memory-based skepticism drives much of the resistance, highlighting perceived differences in health responsibility between genders.</p>
-        </section>
-
-        <section class="section">
-            <h2>3. ADOPTION PESSIMISM & RESISTANCE</h2>
-            <p>Side effects may include widespread adoption pessimism, with predicted male uptake averaging just 16.38% if available immediately.</p>
-
-            <div class="highlight">
-                <h3>"About Time"</h3>
-                <p>69% of female participants voiced relaying "overdue" and "finally"</p>
-            </div>
-
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number">54%</span>
-                    <div class="stat-label">Of men said NO when asked if they'd take a pill with the same side effects as female contraceptives</div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">27.29%</span>
-                    <div class="stat-label">Average predicted adoption rate, with over 50% giving pessimistic predictions (≤20%)</div>
+                <div class="pill-visual">
+                    <!-- 3D pill visual will appear here via Three.js -->
                 </div>
             </div>
         </section>
 
         <section class="section">
-            <h2>4. CURRENT GENDER BURDEN IMBALANCE</h2>
-            <p>Side effects may include massive responsibility imbalance, with women currently handling 75.6% of contraceptive burden according to respondent estimates.</p>
+            <div class="section-header">3. ADOPTION PESSIMISM & RESISTANCE</div>
+            <div class="content-wrapper">
+                <div class="text-content">
+                    <p>Side effects may include widespread adoption pessimism, with predicted male uptake averaging just 16.38% if available immediately.</p>
 
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number">71.04%</span>
-                    <div class="stat-label">Of sexual health conversations initiated by women, suggesting men typically avoid discussing contraceptive topics</div>
+                    <div class="highlight">
+                        <h3>"ABOUT<br>TIME"</h3>
+                        <p style="font-size: 16px;">69% of female participants voiced relaying "overdue" and "finally"</p>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number">57.1%</span>
-                    <div class="stat-label">Believe that in 25 years, it will continue to be mostly women as the primary contraceptive handler</div>
+                <div class="pill-visual">
+                    <!-- 3D pill visual will appear here via Three.js -->
                 </div>
             </div>
-
-            <p>Half of participants link the success, justice, or genuine value to the stakes of addressing gender equality.</p>
         </section>
 
-        <section class="section">
-            <h1>WHY NOT?</h1>
-            <p>The evidence is clear: women have carried the burden of contraception for generations, facing side effects that were deemed "acceptable" while similar effects in male trials were called "adverse."</p>
+        <section class="section" id="facts">
+            <div class="section-header">4. CURRENT GENDER BURDEN IMBALANCE</div>
+            <div class="content-wrapper">
+                <div class="pill-visual">
+                    <!-- 3D pill visual will appear here via Three.js -->
+                </div>
+                <div class="text-content">
+                    <p>Side effects may include massive responsibility imbalance, with women currently handling 75.6% of contraceptive burden according to respondent estimates.</p>
 
-            <div class="highlight">
-                <h3>It's Time to Step Up</h3>
-                <p>This isn't just about a pill—it's about equality, shared responsibility, and proving the skeptics wrong. It's about showing that men can be just as reliable, just as committed to reproductive health.</p>
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <span class="stat-number">71.04%</span>
+                            <div class="stat-label">Of sexual health conversations initiated by women, suggesting men typically avoid discussing contraceptive topics</div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">57.1%</span>
+                            <div class="stat-label">Believe that in 25 years, it will continue to be mostly women as the primary contraceptive handler</div>
+                        </div>
+                    </div>
+
+                    <p>Half of participants link the success, justice, or genuine value to the stakes of addressing gender equality.</p>
+                </div>
             </div>
+        </section>
 
-            <p>So when the male contraceptive pill becomes available... <strong>Why not?</strong></p>
-            <p>Why not take responsibility? Why not share the burden? Why not prove that equality matters to you?</p>
+        <section class="section final-section" id="change">
+            <div class="so-text">SO....</div>
+            <div class="pill-visual">
+                <!-- 3D pill visual will appear here via Three.js -->
+            </div>
+            <div class="why-not">
+                WHY<br>
+                NOT?
+            </div>
+            <div class="learn-more">Learn more below</div>
         </section>
     </div>
+
+    <footer>
+        <a href="#home">HOME</a>
+        <a href="#facts">THE FACTS</a>
+        <a href="#change">CHANGE</a>
+        <a href="#future">THE FUTURE</a>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
