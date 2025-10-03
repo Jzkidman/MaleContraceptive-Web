@@ -56,8 +56,11 @@ let redPillModel = null;
 let whitePillModel = null;
 let redPillData = null;
 let whitePillData = null;
+let blueRoundData = null;
+let blueTextData = null;
 let mixer = null;
 const clock = new THREE.Clock();
+let currentPillType = 'text'; // Track which pill is currently shown
 
 // Helper function to setup pill materials
 function setupPillMaterial(model) {
@@ -108,20 +111,32 @@ function setupPillMaterial(model) {
 // Load GLTF model
 const loader = new THREE.GLTFLoader();
 
-// Load blue pill
+// Load non-text blue pill (initial version - before text range)
 loader.load('./assets/blueRound.gltf', function(gltf) {
     pillModel = gltf.scene;
+    blueRoundData = gltf.scene.clone();
     pillModel.scale.set(20, 20, 20);
     pillModel.position.set(-2, 0, 0);
     setupPillMaterial(pillModel);
     scene.add(pillModel);
+    currentPillType = 'notext';
     document.getElementById('loading').style.display = 'none';
-    console.log('Blue pill loaded successfully');
+    console.log('Blue pill (no text) loaded successfully');
 }, function(progress) {
     console.log('Blue pill loading progress:', (progress.loaded / progress.total * 100) + '%');
 }, function(error) {
     console.error('Error loading blue pill:', error);
     document.getElementById('loading').textContent = 'Error loading 3D model';
+});
+
+// Preload text blue pill for swap
+loader.load('./assets/bluetext.gltf', function(gltf) {
+    blueTextData = gltf.scene;
+    console.log('Blue pill with text preloaded successfully');
+}, function(progress) {
+    console.log('Blue pill (text) loading progress:', (progress.loaded / progress.total * 100) + '%');
+}, function(error) {
+    console.error('Error preloading blue pill (text):', error);
 });
 
 // Load red pill
@@ -165,7 +180,7 @@ let time = 0;
 let scrollY = 0;
 
 // Create debug panel (disabled)
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 let debugPanel;
 if (DEBUG_MODE) {
@@ -213,8 +228,8 @@ let isInteracting = false;
 
 // Define scroll-based positions for each section
 const scrollPositions = [
-    { y: window.innerHeight * 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
-    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 2.6 }, scale: { x: 35, y: 35, z: 35 } },
+    { y: window.innerHeight * 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 3.5, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
+    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
     { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
     { y: window.innerHeight * 2.4, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
     { y: window.innerHeight * 3.32, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
@@ -224,12 +239,12 @@ const scrollPositions = [
 // Define scroll-based positions for red and white pills
 const redPillPositions = [
     { y: window.innerHeight * 0.0, position: { x: -4, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: -0.5 }, scale: { x: 5.5, y: 5.5, z: 5.5 } },
-    { y: window.innerHeight * 0.35, position: { x: -25, y: 4, z: 0 }, rotation: { x: -1, y: -2, z: -2.5 }, scale: { x: 3, y: 3, z: 3 } }
+    { y: window.innerHeight * 0.35, position: { x: -30, y: 4, z: 0 }, rotation: { x: -1, y: -2, z: -2.5 }, scale: { x: 3, y: 3, z: 3 } }
 ];
 
 const whitePillPositions = [
     { y: window.innerHeight * 0.0, position: { x: 0, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: 0.5 }, scale: { x: 6, y: 6, z: 6 } },
-    { y: window.innerHeight * 0.35, position: { x: 10, y: 4, z: 0 }, rotation: { x: 1, y: 2, z: 2.5 }, scale: { x: 3, y: 3, z: 3 } }
+    { y: window.innerHeight * 0.35, position: { x: 15, y: 4, z: 0 }, rotation: { x: 1, y: 2, z: 2.5 }, scale: { x: 3, y: 3, z: 3 } }
 ];
 
 // Function to initialize debug panel controls
@@ -418,6 +433,52 @@ function animate() {
     time += delta;
 
     if (pillModel) {
+        // Calculate scroll multiplier
+        const scrollMultiplier = scrollY / window.innerHeight;
+
+        // Swap between text and non-text pill based on scroll position
+        if (scrollMultiplier >= 0.18 && scrollMultiplier <= 0.85) {
+            // Show text pill in this range
+            if (currentPillType !== 'text' && blueTextData) {
+                const currentPos = pillModel.position.clone();
+                const currentRot = pillModel.rotation.clone();
+                const currentScale = pillModel.scale.clone();
+
+                scene.remove(pillModel);
+                pillModel = blueTextData.clone();
+                pillModel.position.copy(currentPos);
+                pillModel.rotation.copy(currentRot);
+                pillModel.scale.copy(currentScale);
+                setupPillMaterial(pillModel);
+                // Force color to #00aeef for text pill
+                pillModel.traverse(function(child) {
+                    if (child.isMesh && child.material) {
+                        child.material.color.setHex(0x00aeef);
+                    }
+                });
+                scene.add(pillModel);
+                currentPillType = 'text';
+                console.log('Swapped to text pill');
+            }
+        } else {
+            // Show non-text pill outside this range
+            if (currentPillType !== 'notext' && blueRoundData) {
+                const currentPos = pillModel.position.clone();
+                const currentRot = pillModel.rotation.clone();
+                const currentScale = pillModel.scale.clone();
+
+                scene.remove(pillModel);
+                pillModel = blueRoundData.clone();
+                pillModel.position.copy(currentPos);
+                pillModel.rotation.copy(currentRot);
+                pillModel.scale.copy(currentScale);
+                setupPillMaterial(pillModel);
+                scene.add(pillModel);
+                currentPillType = 'notext';
+                console.log('Swapped to non-text pill');
+            }
+        }
+
         // Get interpolated values based on scroll
         const interpolated = getInterpolatedValues(scrollY);
 
@@ -454,7 +515,7 @@ function animate() {
         if (homeContent && scrollY < window.innerHeight * 0.35) {
             const wobbleX = Math.cos(time * 1) * 0.1;
             const wobbleY = Math.sin(time * 1.5) * 0.15;
-            const currentScale = interpolated.scale.x * breathingScale / 20; // Normalize scale
+            const currentScale = interpolated.scale.x * breathingScale / 100; // Normalize scale
 
             homeContent.style.transform = `
                 rotate(30deg)
