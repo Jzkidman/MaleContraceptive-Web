@@ -444,57 +444,12 @@ function animate() {
                 const currentRot = pillModel.rotation.clone();
                 const currentScale = pillModel.scale.clone();
 
-                // Store reference material from current pill
-                let referenceMaterial = null;
-                pillModel.traverse(function(child) {
-                    if (child.isMesh && child.material && !referenceMaterial) {
-                        referenceMaterial = child.material.clone();
-                    }
-                });
-
                 scene.remove(pillModel);
                 pillModel = blueTextData.clone();
                 pillModel.position.copy(currentPos);
                 pillModel.rotation.copy(currentRot);
                 pillModel.scale.copy(currentScale);
                 setupPillMaterial(pillModel);
-
-                // Replace with completely fresh material to avoid embedded darkness
-                pillModel.traverse(function(child) {
-                    if (child.isMesh && child.material) {
-                        const oldMap = child.material.map;
-                        const oldNormalMap = child.material.normalMap;
-
-                        // Create brand new material with white base color so texture isn't darkened
-                        child.material = new THREE.MeshStandardMaterial({
-                            color: 0xffffff, // White base so texture shows at full brightness
-                            metalness: 0.2,
-                            roughness: 0.3,
-                            side: THREE.FrontSide,
-                            flatShading: false,
-                            map: oldMap,
-                            normalMap: oldNormalMap,
-                            emissive: new THREE.Color(0x000000),
-                            emissiveIntensity: 0,
-                            vertexColors: false
-                        });
-
-                        if (child.material.map) {
-                            child.material.map.minFilter = THREE.LinearMipmapLinearFilter;
-                            child.material.map.magFilter = THREE.LinearFilter;
-                            child.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
-                        }
-
-                        if (child.material.normalMap) {
-                            child.material.normalMap.minFilter = THREE.LinearMipmapLinearFilter;
-                            child.material.normalMap.magFilter = THREE.LinearFilter;
-                            child.material.normalScale.set(0.5, 0.5);
-                        }
-
-                        child.material.needsUpdate = true;
-                    }
-                });
-
                 scene.add(pillModel);
                 currentPillType = 'text';
                 console.log('Swapped to text pill');

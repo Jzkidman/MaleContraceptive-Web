@@ -1,167 +1,137 @@
-// GSAP ScrollTrigger animations for sections
+// GSAP ScrollTrigger animations
 gsap.registerPlugin(ScrollTrigger);
 
-// Split text into words manually
+// Split text into words
 function splitTextIntoWords(element) {
     const text = element.textContent;
     const words = text.trim().split(/\s+/);
     element.innerHTML = words.map(word => `<span class="word">${word}</span>`).join(' ');
 }
 
-// Split title text into words
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Animate title - split into words and fade out on scroll
     const titleParagraphs = document.querySelectorAll('.title p');
     titleParagraphs.forEach(p => splitTextIntoWords(p));
 
-    // Animate title fade out word by word
     gsap.to('.title .word', {
         opacity: 0,
         y: -100,
         scrollTrigger: {
             trigger: '#content',
             start: 'top top',
-            end: 'top -200px',
+            end: 'top -100px',
             scrub: 1,
             markers: false
         }
     });
-});
 
-// Animate each section
-const sections = gsap.utils.toArray('.section');
+        // 2. Animate section-header and content-wrapper elements in each section
+    const sections = document.querySelectorAll('.section');
+    sections.forEach((section) => {
+        const header = section.querySelector('.section-header');
+        const wrapper = section.querySelector('.content-wrapper');
 
-sections.forEach((section, index) => {
-    const isHomeSection = section.id === 'home';
+        if (wrapper) {
+            // Collect all elements to animate
+            const elementsToAnimate = [];
+            if (header) elementsToAnimate.push(header);
+            const children = wrapper.querySelectorAll('*');
+            elementsToAnimate.push(...children);
 
-    if (isHomeSection) {
-        // Special animation for home section - scale and rotate in
-        gsap.fromTo(section,
-            {
-                opacity: 0,
-                scale: 0.8,
-                rotation: -15
-            },
-            {
-                opacity: 1,
-                scale: 1,
-                rotation: 0,
-                duration: 1.5,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 70%",
-                    end: "bottom 50%",
-                    toggleActions: "play reverse play reverse",
-                    markers: true
-                }
-            }
-        );
-
-        // Animate home content with different timing
-        const homeContent = section.querySelector('.home-content');
-        if (homeContent) {
-            gsap.fromTo(homeContent,
+            gsap.fromTo(elementsToAnimate,
                 {
                     opacity: 0,
-                    x: -100,
-                    rotation: 15
+                    y: 50
                 },
                 {
                     opacity: 1,
-                    x: 0,
-                    rotation: 30, // Final rotation matches CSS
-                    duration: 1.2,
-                    delay: 0.3,
+                    y: 0,
+                    duration: 1,
+                    stagger: 0.1,
                     ease: "power2.out",
                     scrollTrigger: {
-                        trigger: section,
-                        start: "top 200%",
-                        end: "bottom 50%",
+                        trigger: wrapper,
+                        start: "top 70%",
+                        end: "bottom 30%",
                         toggleActions: "play reverse play reverse",
-                        markers: true
+                        markers: false
                     }
                 }
             );
         }
-    } else {
-        // Standard animation for other sections
-        gsap.fromTo(section,
+    });
+
+    // 3. Animate .so-text when in view
+    const soText = document.querySelector('.so-text');
+    if (soText) {
+        gsap.fromTo(soText,
             {
                 opacity: 0,
+                scale: 0.5
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "back.out(1.7)",
+                scrollTrigger: {
+                    trigger: soText,
+                    start: "top 80%",
+                    end: "bottom 30%",
+                    toggleActions: "play reverse play reverse",
+                    markers: false
+                }
+            }
+        );
+    }
+
+    // 4. Animate .why-not when in view with pin to hold on screen
+    const whyNot = document.querySelector('.why-not');
+    if (whyNot) {
+        const finalSection = document.querySelector('.final-section');
+
+        // Pin the final section to hold "WHY NOT" on screen
+        if (finalSection) {
+            ScrollTrigger.create({
+                trigger: finalSection,
+                start: "top top",
+                end: "+=100%",
+                pin: true,
+                pinSpacing: false,
+                markers: false
+            });
+        }
+
+        gsap.fromTo(whyNot,
+            {
+                opacity: 0,
+                scale: 0.3,
                 y: 100
             },
             {
                 opacity: 1,
+                scale: 1,
                 y: 0,
-                duration: 1,
+                duration: 1.5,
                 ease: "power2.out",
                 scrollTrigger: {
-                    trigger: section,
-                    start: "top 70%",
-                    end: "bottom 50%",
+                    trigger: whyNot,
+                    start: "top 80%",
+                    end: "bottom 30%",
                     toggleActions: "play reverse play reverse",
-                    markers: true
-                }
-            }
-        );
-
-        // Animate child elements with stagger
-        const children = section.querySelectorAll('h1, h2, h3, p, .highlight, .stats, .so-text');
-        gsap.fromTo(children,
-            {
-                opacity: 0,
-                y: 30
-            },
-            {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                stagger: 0.05,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: section,
-                    start: "top 50%",
-                    end: "bottom 50%",
-                    toggleActions: "play reverse play reverse",
-                    markers: true
+                    markers: false
                 }
             }
         );
     }
 });
 
-// Animate "WHY NOT?" specifically
-const whyNotElement = document.querySelector('.why-not');
-if (whyNotElement) {
-    gsap.fromTo(whyNotElement,
-        {
-            opacity: 0,
-            scale: 0.5,
-            y: 50
-        },
-        {
-            opacity: 1,
-            scale: 1.75,
-            y: 0,
-            duration: 1.5,
-            ease: "power2.out",
-            scrollTrigger: {
-                trigger: whyNotElement,
-                start: "top 70%",
-                end: "bottom 50%",
-                toggleActions: "play reverse play reverse",
-                markers: true
-            }
-        }
-    );
-}
-
 // Handle window resize - refresh ScrollTrigger
 window.addEventListener('resize', () => {
     ScrollTrigger.refresh();
 });
 
-// Refresh ScrollTrigger after 3D models load
+// Refresh ScrollTrigger after models load
 window.addEventListener('load', () => {
     setTimeout(() => {
         ScrollTrigger.refresh();
