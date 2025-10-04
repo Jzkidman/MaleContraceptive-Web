@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 end: "+=100%",
                 pin: true,
                 pinSpacing: false,
-                markers: false
+                markers: true
             });
         }
 
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrollTrigger: {
                     trigger: whyNot,
                     start: "top 80%",
-                    end: "bottom 30%",
+                    end: "bottom 5%",
                     toggleActions: "play reverse play reverse",
                     markers: true
                 }
