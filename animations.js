@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (finalSection) {
             ScrollTrigger.create({
                 trigger: finalSection,
-                start: "top top",
+                start: "center center",
                 end: "+=100%",
                 pin: true,
                 pinSpacing: false,
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: "top 80%",
                     end: "bottom 30%",
                     toggleActions: "play reverse play reverse",
-                    markers: false
+                    markers: true
                 }
             }
         );
