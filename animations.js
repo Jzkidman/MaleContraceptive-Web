@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 end: "+=100%",
                 pin: true,
                 pinSpacing: false,
-                markers: true
+                markers: false
             });
         }
 
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: "top 80%",
                     end: "bottom 5%",
                     toggleActions: "play reverse play reverse",
-                    markers: true
+                    markers: false
                 }
             }
         );
