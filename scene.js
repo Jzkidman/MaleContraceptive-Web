@@ -437,7 +437,7 @@ function animate() {
         const scrollMultiplier = scrollY / window.innerHeight;
 
         // Swap between text and non-text pill based on scroll position
-        if (scrollMultiplier >= 0.18 && scrollMultiplier <= 0.85) {
+        if (scrollMultiplier >= 0 && scrollMultiplier <= 0.85) {
             // Show text pill in this range
             if (currentPillType !== 'text' && blueTextData) {
                 const currentPos = pillModel.position.clone();
