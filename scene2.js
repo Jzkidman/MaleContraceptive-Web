@@ -50,6 +50,13 @@ const rimLight = new THREE.PointLight(0x88aaff, 0.6, 30);
 rimLight.position.set(0, 0, -8);
 scene.add(rimLight);
 
+// Underside fill light for green text pill (active between scroll 2.8x-3.4x)
+const undersideLight = new THREE.DirectionalLight(0xffffff, 0.8);
+undersideLight.position.set(0, -5, 8);
+undersideLight.target.position.set(0, 0, 0);
+scene.add(undersideLight);
+scene.add(undersideLight.target);
+
 // Variables for animation
 let redPillModel = null;
 let greenPillTextModel = null;
@@ -60,7 +67,7 @@ let time = 0;
 let scrollY = 0;
 
 // Create debug panel
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 let debugPanel;
 let manualOverrides = {};
@@ -182,7 +189,10 @@ loader.load('./assets/pg2/greenpill_text.gltf', function(gltf) {
     greenPillTextModel.position.set(0, 0, 0);
     greenPillTextModel.rotation.set(0, 0, 0);
     setupPillMaterial(greenPillTextModel);
-    // Don't add to scene initially - will be added when scrolled to
+    // Add to scene and immediately remove to force GPU compilation
+    scene.add(greenPillTextModel);
+    renderer.render(scene, camera);
+    scene.remove(greenPillTextModel);
     modelsLoaded++;
     if (modelsLoaded === 3) {
         document.getElementById('loading').style.display = 'none';
@@ -202,7 +212,10 @@ loader.load('./assets/pg2/greenpill.gltf', function(gltf) {
     greenPillPlainModel.position.set(0, 0, 0);
     greenPillPlainModel.rotation.set(0, 0, 0);
     setupPillMaterial(greenPillPlainModel);
-    // Don't add to scene initially - will be added when scrolled to
+    // Add to scene and immediately remove to force GPU compilation
+    scene.add(greenPillPlainModel);
+    renderer.render(scene, camera);
+    scene.remove(greenPillPlainModel);
     modelsLoaded++;
     if (modelsLoaded === 3) {
         document.getElementById('loading').style.display = 'none';
@@ -252,17 +265,16 @@ const greenPillTextPositions = [
     // Section 4: Success Isn't Guaranteed - Complete rotation (180 degrees)
     { y: window.innerHeight * 3.2, position: { x: 0, y: 0, z: -1 }, rotation: { x: 2.5, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
+    { y: window.innerHeight * 3.6, position: { x: 0, y: 0, z: -1 }, rotation: { x: 2.5, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+
     // Fade out at 3.5
-    { y: window.innerHeight * 3.5, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 }
+    { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 }
 ];
 
 // Green pill plain (no text) positions (sections 3.5-8, fades in at 4.0)
 const greenPillPlainPositions = [
-    // Start invisible at section 3.5
-    { y: window.innerHeight * 3.5, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 },
-
     // Section 5: The Pill Exists - Fade in
-    { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 1 },
+    { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 },
 
     // Section 6: The Interest is Real - Green pill continues
     { y: window.innerHeight * 5, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.4, y: Math.PI + 0.6, z: 0.2 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
@@ -270,8 +282,12 @@ const greenPillPlainPositions = [
     // Section 7: The Hesitation is Clear - Green pill more rotation
     { y: window.innerHeight * 6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.6, y: Math.PI + 0.9, z: 0.3 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
 
-    // Section 8: Why Not? - Final green pill position
-    { y: window.innerHeight * 7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.8, y: Math.PI + 1.2, z: 0.4 }, scale: { x: 20, y: 20, z: 20 }, opacity: 1 }
+    { y: window.innerHeight * 7.13, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.8, y: Math.PI + 1.2, z: 0.4 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
+
+    { y: window.innerHeight * 7.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.8, y: Math.PI + 1.2, z: 0.4 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
+
+    { y: window.innerHeight * 8.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 40, y: 40, z: 40 }, opacity: 1 }
+
 ];
 
 // Helper function to get current section for a specific positions array
@@ -291,7 +307,7 @@ function initializeDebugPanel(currentSection) {
     const scrollMultiplier = scrollY / window.innerHeight;
     let pillType, positionsArray, adjustedSection;
 
-    if (scrollMultiplier >= 3.3) {
+    if (scrollMultiplier >= 4.0) {
         pillType = 'GREEN PLAIN';
         positionsArray = greenPillPlainPositions;
         adjustedSection = getCurrentSection(scrollY, greenPillPlainPositions);
@@ -347,7 +363,7 @@ function initializeDebugPanel(currentSection) {
         const scrollMultiplier = scrollY / window.innerHeight;
         let positionsArray, adjustedSection, lockType;
 
-        if (scrollMultiplier >= 3.3) {
+        if (scrollMultiplier >= 4.0) {
             positionsArray = greenPillPlainPositions;
             adjustedSection = getCurrentSection(scrollY, greenPillPlainPositions);
             lockType = 'greenplain';
@@ -410,7 +426,7 @@ function updateDebugPanel(redInterpolated, greenTextInterpolated, greenPlainInte
     const scrollMultiplier = scrollY / window.innerHeight;
     let currentPillType, positionsArray, interpolated;
 
-    if (scrollMultiplier >= 3.3) {
+    if (scrollMultiplier >= 4.0) {
         currentPillType = 'GREEN PLAIN';
         positionsArray = greenPillPlainPositions;
         interpolated = greenPlainInterpolated;
@@ -519,8 +535,8 @@ function animate() {
 
     // Determine which pill should be active based on scroll
     const shouldShowRed = scrollMultiplier <= 2.0;
-    const shouldShowGreenText = scrollMultiplier >= 1.5 && scrollMultiplier <= 3.7;
-    const shouldShowGreenPlain = scrollMultiplier >= 3.3;
+    const shouldShowGreenText = scrollMultiplier >= 1.5 && scrollMultiplier <= 4.1;
+    const shouldShowGreenPlain = scrollMultiplier >= 4.0;
 
     // Breathing effect calculation (shared)
     const breathingScale = 1 + Math.sin(time * 2) * 0.02;
@@ -663,7 +679,7 @@ function animate() {
 
     // Update lights to follow the active pill
     let activePill = null;
-    if (scrollMultiplier >= 3.3 && greenPillPlainModel && greenPillPlainModel.parent === scene) {
+    if (scrollMultiplier >= 4.0 && greenPillPlainModel && greenPillPlainModel.parent === scene) {
         activePill = greenPillPlainModel;
     } else if (scrollMultiplier >= 1.5 && greenPillTextModel && greenPillTextModel.parent === scene) {
         activePill = greenPillTextModel;
@@ -679,6 +695,29 @@ function animate() {
         rimLight.position.x = activePill.position.x;
         rimLight.position.y = activePill.position.y;
         rimLight.position.z = activePill.position.z - 8;
+    }
+
+    // Control underside light intensity based on scroll position (2.8x-3.4x)
+    if (scrollMultiplier >= 2.8 && scrollMultiplier <= 3.4) {
+        // Fade in at 2.8, full at 2.9, fade out at 3.4
+        let intensity;
+        if (scrollMultiplier < 2.9) {
+            intensity = (scrollMultiplier - 2.8) / 0.1; // Fade in from 2.8 to 2.9
+        } else if (scrollMultiplier > 3.3) {
+            intensity = (3.4 - scrollMultiplier) / 0.1; // Fade out from 3.3 to 3.4
+        } else {
+            intensity = 1; // Full intensity between 2.9 and 3.3
+        }
+        undersideLight.intensity = intensity * 0.8;
+
+        // Follow the green text pill if it's active
+        if (greenPillTextModel && greenPillTextModel.parent === scene) {
+            undersideLight.target.position.x = greenPillTextModel.position.x;
+            undersideLight.target.position.y = greenPillTextModel.position.y;
+            undersideLight.target.position.z = greenPillTextModel.position.z;
+        }
+    } else {
+        undersideLight.intensity = 0;
     }
 
     renderer.render(scene, camera);

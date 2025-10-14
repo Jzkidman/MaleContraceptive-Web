@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 start: "center center",
                 end: "+=100%",
                 pin: true,
-                pinSpacing: false,
                 markers: false
             });
         }

@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrollTrigger: {
                     trigger: title,
                     start: "top 80%",
-                    end: "top 30%",
+                    end: "top 20%",
                     toggleActions: "play reverse play reverse",
-                    markers: false
+                    markers: true
                 }
             }
         );
@@ -131,43 +131,43 @@ document.addEventListener('DOMContentLoaded', () => {
         );
     });
 
-    // Special animation for final "WHY NOT?" text
-    const finalText = document.querySelector('.final-text');
-    if (finalText) {
-        gsap.fromTo(finalText,
+    // Animate .why-not when in view with pin to hold on screen
+    const whyNot = document.querySelector('.why-not');
+    if (whyNot) {
+        const finalSection = document.querySelector('.final-section');
+
+        // Pin the final section to hold "WHY NOT" on screen
+        if (finalSection) {
+            ScrollTrigger.create({
+                trigger: finalSection,
+                start: "top center",
+                end: "+=250%",
+                pin: true,
+                markers: false,
+            });
+        }
+
+        gsap.fromTo(whyNot,
             {
                 opacity: 0,
                 scale: 0.3,
-                rotation: -20
+                y: 100
             },
             {
                 opacity: 1,
                 scale: 1,
-                rotation: 0,
-                duration: 1.5,
-                ease: "elastic.out(1, 0.5)",
+                y: 0,
+                duration: 2.5,
+                ease: "power2.out",
                 scrollTrigger: {
-                    trigger: finalText,
+                    trigger: whyNot,
                     start: "top 80%",
-                    end: "top 20%",
+                    end: "+=200%",
                     toggleActions: "play reverse play reverse",
                     markers: false
                 }
             }
         );
-    }
-
-    // Pin the final section to hold "WHY NOT?" on screen
-    const finalSection = document.querySelector('#section8');
-    if (finalSection) {
-        ScrollTrigger.create({
-            trigger: finalSection,
-            start: "center center",
-            end: "+=100%",
-            pin: true,
-            pinSpacing: false,
-            markers: false
-        });
     }
 });
 

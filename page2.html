@@ -71,7 +71,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 50;
+            z-index: 1;
             pointer-events: none;
         }
 
@@ -82,7 +82,6 @@
         #content {
             position: relative;
             width: 100vw;
-            z-index: 10;
             background: transparent;
             padding: 0;
             pointer-events: auto;
@@ -160,7 +159,7 @@
         }
 
         .gradient-section {
-            background: linear-gradient(180deg, #000000 0%, #73E333 95%, #000000 100%);
+            background: linear-gradient(180deg, #000000 0%, #73E333 80%, #000000 100%);
         }
 
         .final-text {
@@ -178,8 +177,86 @@
             transform: translate(-50%, -50%);
             color: white;
             font-size: 18px;
-            z-index: 50;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .ontop {
+            z-index: 10;
+        }
+
+        .lower {
+            margin-bottom: 600px;
+        }
+
+        /* Final Section - Why Not */
+        .final-section {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .final-section .so-text {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 250px;
+            letter-spacing: 8px;
+        }
+
+        .final-section .why-not {
+            font-size: 180px;
+            font-weight: bold;
+            color: #ffffff;
+            line-height: 1;
+            margin: 40px 0;
+            margin-bottom: 420px;
+            top: -300px;
+            position: absolute;
+        }
+
+        /* Footer Navigation */
+        footer {
+            position: relative;
+            width: 100%;
+            background: transparent;
+            z-index: 100;
+            margin-top: 300px;
+        }
+
+        footer .learn-more {
+            text-align: center;
+            font-size: 16px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #00d9ff;
+        }
+
+        footer .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: transparent;
+            z-index: 100;
         }
 
         @media (max-width: 768px) {
@@ -211,7 +288,7 @@
     </nav>
 
     <div id="canvas-container">
-        <div id="loading">Loading 3D model...</div>
+        <div id="loading"></div>
     </div>
 
     <div id="content">
@@ -227,7 +304,7 @@
 
         <!-- Section 3: Trust is the Real Side Effect (Green gradient starts) -->
         <div class="gradient-section">
-            <section class="section" id="section3">
+            <section class=" ontop section" id="section3">
                 <div class="section-title">TRUST IS THE REAL SIDE EFFECT</div>
             </section>
 
@@ -238,26 +315,42 @@
         </div>
 
         <!-- Section 5: The Pill Exists -->
-        <section class="section" id="section5">
+        <section class="ontop small section" id="section5" style="margin-top: 200px;">
             <div class="section-title">THE PILL EXISTS</div>
         </section>
 
         <!-- Section 6: The Interest is Real -->
         <div class="gradient-section">
-            <section class="section" id="section6">
+            <section class="small section" id="section6">
                 <div class="section-title">THE INTEREST IS REAL</div>
             </section>
 
             <!-- Section 7: The Hesitation is Clear -->
-            <section class="section" id="section7">
+            <section class="small lower section" id="section7">
                 <div class="section-title">THE HESITATION IS CLEAR</div>
             </section>
 
             <!-- Section 8: Why Not? -->
-            <section class="section" id="section8">
-                <div class="section-title">WHY<br><br>NOT?</div>
+            <section class="small section final-section" id="section8">
+                <div class="why-not">
+                    WHY<br><br>
+                    NOT?
+                </div>
             </section>
+
+            <footer>
+                <hr style="border: 1px solid #ffffff; width: 80%; margin: 0 auto 30px auto;">
+                <div class="learn-more">Learn more below</div>
+
+                <div class="links">
+                    <a href="index.html">HOME</a>
+                    <a href="page2.html">THE FACTS</a>
+                    <a href="#change">CHANGE</a>
+                    <a href="#future">THE FUTURE</a>
+                </div>
+            </footer>
         </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
