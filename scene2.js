@@ -67,7 +67,7 @@ let time = 0;
 let scrollY = 0;
 
 // Create debug panel
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 let debugPanel;
 let manualOverrides = {};
@@ -251,21 +251,23 @@ const redPillPositions = [
     { y: window.innerHeight * 0.88, position: { x: 0, y: -1.5, z: 0 }, rotation: { x: 3.00, y: 0, z: 1.55 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
     // Fade out point
-    { y: window.innerHeight * 1.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 }
+    { y: window.innerHeight * 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 }
 ];
 
 // Green pill with text positions (sections 2-3.5, fades out at 3.5)
 const greenPillTextPositions = [
     // Start invisible at section 1.7
-    { y: window.innerHeight * 1.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 1, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 },
+    { y: window.innerHeight * 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 1, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 },
 
     // Section 3: Trust is the Real Side Effect - Fade in
     { y: window.innerHeight * 2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
-    // Section 4: Success Isn't Guaranteed - Complete rotation (180 degrees)
-    { y: window.innerHeight * 3.2, position: { x: 0, y: 0, z: -1 }, rotation: { x: 2.5, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { y: window.innerHeight * 2.6, position: { x: 0, y: 0, z: -0.56 }, rotation: { x: 1.40, y: 0.00, z: 0.00 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
-    { y: window.innerHeight * 3.6, position: { x: 0, y: 0, z: -1 }, rotation: { x: 2.5, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    // Section 4: Success Isn't Guaranteed - Complete rotation (180 degrees)
+    { y: window.innerHeight * 3.2, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3.3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+
+    { y: window.innerHeight * 3.6, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
     // Fade out at 3.5
     { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 }
@@ -274,19 +276,14 @@ const greenPillTextPositions = [
 // Green pill plain (no text) positions (sections 3.5-8, fades in at 4.0)
 const greenPillPlainPositions = [
     // Section 5: The Pill Exists - Fade in
-    { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 },
+    { y: window.innerHeight * 3.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 4, y: 4, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0},
 
     // Section 6: The Interest is Real - Green pill continues
-    { y: window.innerHeight * 5, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.4, y: Math.PI + 0.6, z: 0.2 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
+    { y: window.innerHeight * 4.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 2.80, y: 3.24, z: 0.60 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
 
-    // Section 7: The Hesitation is Clear - Green pill more rotation
-    { y: window.innerHeight * 6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.6, y: Math.PI + 0.9, z: 0.3 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
-
-    { y: window.innerHeight * 7.13, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.8, y: Math.PI + 1.2, z: 0.4 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
-
-    { y: window.innerHeight * 7.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.8, y: Math.PI + 1.2, z: 0.4 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
-
-    { y: window.innerHeight * 8.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 40, y: 40, z: 40 }, opacity: 1 }
+    { y: window.innerHeight * 5.46, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1},
+    { y: window.innerHeight * 7.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: -0.30, y: 3.14, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
+    { y: window.innerHeight * 8.2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 6.3, z: 0 }, scale: { x: 50, y: 50, z: 50 }, opacity: 1 }
 
 ];
 
@@ -411,7 +408,17 @@ function initializeDebugPanel(currentSection) {
     });
 
     document.getElementById('copy-values').addEventListener('click', () => {
-        const code = `{ y: window.innerHeight * ${sectionMultiplier}, position: { x: ${override.position.x}, y: ${override.position.y}, z: ${override.position.z} }, rotation: { x: ${override.rotation.x.toFixed(2)}, y: ${override.rotation.y.toFixed(2)}, z: ${override.rotation.z.toFixed(2)} }, scale: { x: ${override.scale.x}, y: ${override.scale.y}, z: ${override.scale.z} } }`;
+        const posX = parseFloat(document.getElementById('pos-x').value);
+        const posY = parseFloat(document.getElementById('pos-y').value);
+        const posZ = parseFloat(document.getElementById('pos-z').value);
+        const rotX = parseFloat(document.getElementById('rot-x').value);
+        const rotY = parseFloat(document.getElementById('rot-y').value);
+        const rotZ = parseFloat(document.getElementById('rot-z').value);
+        const scaleX = parseFloat(document.getElementById('scale-x').value);
+        const scaleY = parseFloat(document.getElementById('scale-y').value);
+        const scaleZ = parseFloat(document.getElementById('scale-z').value);
+
+        const code = `{ y: window.innerHeight * ${sectionMultiplier}, position: { x: ${posX}, y: ${posY}, z: ${posZ} }, rotation: { x: ${rotX.toFixed(2)}, y: ${rotY.toFixed(2)}, z: ${rotZ.toFixed(2)} }, scale: { x: ${scaleX}, y: ${scaleY}, z: ${scaleZ} }, opacity: ${override.opacity} }`;
         navigator.clipboard.writeText(code);
         alert('Code copied to clipboard!');
     });
@@ -698,13 +705,13 @@ function animate() {
     }
 
     // Control underside light intensity based on scroll position (2.8x-3.4x)
-    if (scrollMultiplier >= 2.8 && scrollMultiplier <= 3.4) {
+    if (scrollMultiplier >= 2.8 && scrollMultiplier <= 3.6) {
         // Fade in at 2.8, full at 2.9, fade out at 3.4
         let intensity;
         if (scrollMultiplier < 2.9) {
             intensity = (scrollMultiplier - 2.8) / 0.1; // Fade in from 2.8 to 2.9
         } else if (scrollMultiplier > 3.3) {
-            intensity = (3.4 - scrollMultiplier) / 0.1; // Fade out from 3.3 to 3.4
+            intensity = (3.6 - scrollMultiplier) / 0.1; // Fade out from 3.3 to 3.4
         } else {
             intensity = 1; // Full intensity between 2.9 and 3.3
         }
