@@ -67,7 +67,7 @@ let time = 0;
 let scrollY = 0;
 
 // Create debug panel
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 let debugPanel;
 let manualOverrides = {};
