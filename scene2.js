@@ -282,7 +282,7 @@ const greenPillPlainPositions = [
     { y: window.innerHeight * 4.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 2.80, y: 3.24, z: 0.60 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
 
     { y: window.innerHeight * 5.46, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1},
-    { y: window.innerHeight * 7.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: -0.30, y: 3.14, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
+    { y: window.innerHeight * 7.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: -0.30, y: 3.14, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
     { y: window.innerHeight * 8.2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 6.3, z: 0 }, scale: { x: 50, y: 50, z: 50 }, opacity: 1 }
 
 ];
