@@ -98,7 +98,6 @@
             top: -80px;
             left: 50%;
             transform: translateX(-50%) rotate(180deg);
-            z-index: 99;
             pointer-events: none;
         }
 
@@ -125,7 +124,6 @@
         #content {
             position: relative;
             width: 100vw;
-            z-index: 10;
             background: transparent;
             padding: 0;
             pointer-events: auto;
@@ -151,6 +149,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            max-height: 80vh;
+            height: 80vh;
         }
 
         #home .home-content {
@@ -229,23 +229,23 @@
         }
 
         .highlight {
-            background: transparent;
+            background: #00adee;
             display: flex;
-            padding: 0;
-            margin: 30px 0;
+            padding: 5px;
             gap: 20px;
+            align-items: center;
+            padding: 0 10px;
         }
 
         .highlight h3 {
-            font-size: 32px;
+            font-size: 40px;
             font-weight: bold;
             color: #ffffff;
-            margin-bottom: 15px;
             text-align: center;
+            margin: 10px 5px;
         }
 
         .highlight p {
-            margin-top: 36px;
             text-align: left;
         }
 
@@ -270,6 +270,7 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            z-index: 5;
         }
 
         .final-section .so-text {
@@ -330,13 +331,12 @@
             align-items: center;
             padding: 20px 0;
             background: transparent;
-            z-index: 100;
         }
 
         .stat-item {
             text-align: center;
             padding: 30px;
-            background: #ffffff;
+            background: #00adee;
             border-radius: 50%;
             width: 180px;
             height: 180px;
@@ -366,6 +366,95 @@
             gap: 50px;
         }
 
+        /* Pill Storm Section */
+        .pill-storm-section {
+            position: relative;
+            overflow: hidden;
+            width: 100vw !important;
+            max-width: 100vw !important;
+            min-height: 120vh !important; /* Taller than viewport */
+            height: 120vh !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        #pill-storm-canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100vw;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #pill-storm-canvas-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pill-storm-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+            top: -200px;
+        }
+
+        .storm-text {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .storm-divider {
+            width: 80%;
+            height: 3px;
+            background: #ffffff;
+            margin: 80px 0;
+        }
+
+        .storm-subtext {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .storm-subtext:first-of-type {
+            margin-top: 40px;
+        }
+
+        /* Rundown Section */
+        .rundown-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 20vh;
+            height: 20vh;
+        }
+
+        .rundown-content {
+            text-align: center;
+            width: 100%;
+        }
+
         #loading {
             position: fixed;
             top: 50%;
@@ -373,8 +462,15 @@
             transform: translate(-50%, -50%);
             color: white;
             font-size: 18px;
-            z-index: 50;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .gradient {
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%,#2AA9DF 85%,  #2AA9DF 95%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .section-divider {
+            height: 100vh;
         }
 
         @media (max-width: 768px) {
@@ -410,7 +506,7 @@
     </nav>
 
     <div id="canvas-container">
-        <div id="loading">Loading 3D model...</div>
+        <div id="loading"></div>
     </div>
 
     <div id="content">
@@ -423,76 +519,99 @@
         <section class="section" id="home">
         </section>
 
-        <section class="section">
-            <div class="section-header">3. ADOPTION PESSIMISM & RESISTANCE</div>
-            <div class="content-wrapper">
-                <div class="text-content">
-                    <p>Side effects may include widespread adoption pessimism, with predicted male uptake averaging just 16.38% if available immediately.</p>
+        <section class="section pill-storm-section" id="pill-storm">
+            <div id="pill-storm-canvas-container"></div>
+            <div class="pill-storm-content">
+                <h2 class="storm-text">IT MIGHT FEEL</h2>
+                <h2 class="storm-text">LIKE IT'S A LITTLE</h2>
+                <h2 class="storm-text">COMPLICATED</h2>
+            </div>
+        </section>
 
-                    <div class="highlight">
-                        <h3>"ABOUT<br>TIME"</h3>
-                        <p>69% of female participants voiced relaying "overdue" and "finally"</p>
+        <section class="section rundown-section">
+            <div class="rundown-content">
+                <h2 class="storm-subtext">BUT HERE'S THE</h2>
+                <h2 class="storm-subtext">RUNDOWN</h2>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+            
+        <div class="gradient">
+            <section class="section">
+                <div class="section-header">3. ADOPTION PESSIMISM & RESISTANCE</div>
+                <div class="content-wrapper">
+                    <div class="text-content">
+                        <p>Side effects may include widespread adoption pessimism, with predicted male uptake averaging just 16.38% if available immediately.</p>
+
+                        <div class="highlight">
+                            <h3>"ABOUT<br>TIME"</h3>
+                            <p>69% of female participants voiced relaying <br><b>"overdue" and "finally"</b></p>
+                        </div>
+                    </div>
+                    <div class="pill-visual">
+                        <!-- 3D pill visual will appear here via Three.js -->
                     </div>
                 </div>
+            </section>
+
+            <section class="section" id="facts">
+                <div class="section-header" style="align-self: flex-end;">4. CURRENT GENDER BURDEN IMBALANCE</div>
+                <div class="content-wrapper">
+                    <div class="pill-visual">
+                        <!-- 3D pill visual will appear here via Three.js -->
+                    </div>
+                    <div class="text-content">
+                        <p>Side effects may include massive responsibility imbalance, with women currently handling 75.6% of contraceptive burden according to respondent estimates.</p>
+
+                        <div class="stats-list">
+                            <div class="stat-item">
+                                <span class="stat-number">71.04%</span>
+                                <div class="stat-label">Of sexual health conversations initiated by women, suggesting men typically avoid discussing contraceptive topics</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">57.1%</span>
+                                <div class="stat-label">Believe that in 25 years, it will continue to be mostly women as the primary contraceptive handler</div>
+                            </div>
+                        </div>
+
+                        <p>Half of participants link the success, justice, or genuine value to the stakes of addressing gender equality.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section final-section" id="change">
+                <div class="so-text">SO....</div>
                 <div class="pill-visual">
                     <!-- 3D pill visual will appear here via Three.js -->
                 </div>
-            </div>
-        </section>
-
-        <section class="section" id="facts">
-            <div class="section-header">4. CURRENT GENDER BURDEN IMBALANCE</div>
-            <div class="content-wrapper">
-                <div class="pill-visual">
-                    <!-- 3D pill visual will appear here via Three.js -->
+                <div class="why-not">
+                    WHY<br><br>
+                    NOT?
                 </div>
-                <div class="text-content">
-                    <p>Side effects may include massive responsibility imbalance, with women currently handling 75.6% of contraceptive burden according to respondent estimates.</p>
+            </section>
 
-                    <div class="stats-list">
-                        <div class="stat-item">
-                            <span class="stat-number">71.04%</span>
-                            <div class="stat-label">Of sexual health conversations initiated by women, suggesting men typically avoid discussing contraceptive topics</div>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">57.1%</span>
-                            <div class="stat-label">Believe that in 25 years, it will continue to be mostly women as the primary contraceptive handler</div>
-                        </div>
-                    </div>
 
-                    <p>Half of participants link the success, justice, or genuine value to the stakes of addressing gender equality.</p>
+            <footer>
+                <div class="learn-more">Learn more below</div>
+
+                <div class="links">
+                    <a href="#home">HOME</a>
+                    <a href="#facts">THE FACTS</a>
+                    <a href="#change">CHANGE</a>
+                    <a href="#future">THE FUTURE</a>
                 </div>
-            </div>
-        </section>
-
-        <section class="section final-section" id="change">
-            <div class="so-text">SO....</div>
-            <div class="pill-visual">
-                <!-- 3D pill visual will appear here via Three.js -->
-            </div>
-            <div class="why-not">
-                WHY<br><br>
-                NOT?
-            </div>
-        </section>
-    </div>
-
-    <footer>
-        <div class="learn-more">Learn more below</div>
-
-        <div class="links">
-            <a href="#home">HOME</a>
-            <a href="#facts">THE FACTS</a>
-            <a href="#change">CHANGE</a>
-            <a href="#future">THE FUTURE</a>
+            </footer>
         </div>
-    </footer>
+    </div>
+       
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="scene.js"></script>
+    <script src="pillStorm.js"></script>
     <script src="animations.js"></script>
 </body>
 </html>

@@ -25,6 +25,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Animate pill storm text
+    const stormTexts = document.querySelectorAll('.storm-text');
+    const stormSubtexts = document.querySelectorAll('.storm-subtext');
+    const stormDivider = document.querySelector('.storm-divider');
+
+    if (stormTexts.length > 0) {
+        gsap.fromTo(stormTexts,
+            {
+                opacity: 0,
+                y: 50
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: '.pill-storm-section',
+                    start: "top 60%",
+                    end: "bottom 40%",
+                    toggleActions: "play reverse play reverse",
+                    markers: false
+                }
+            }
+        );
+    }
+
+    if (stormDivider) {
+        gsap.fromTo(stormDivider,
+            {
+                scaleX: 0,
+                opacity: 0
+            },
+            {
+                scaleX: 1,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: stormDivider,
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    toggleActions: "play reverse play reverse",
+                    markers: false
+                }
+            }
+        );
+    }
+
+    if (stormSubtexts.length > 0) {
+        gsap.fromTo(stormSubtexts,
+            {
+                opacity: 0,
+                y: 50
+            },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: stormSubtexts[0],
+                    start: "top 70%",
+                    end: "bottom 30%",
+                    toggleActions: "play reverse play reverse",
+                    markers: false
+                }
+            }
+        );
+    }
+
         // 2. Animate section-header and content-wrapper elements in each section
     const sections = document.querySelectorAll('.section');
     sections.forEach((section) => {
