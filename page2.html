@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Facts - Male Contraceptive Pills</title>
+    <link rel="stylesheet" href="https://use.typekit.net/xcr5gla.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: #000000;
+            font-family: 'neue-haas-grotesk-display', sans-serif;
+            scroll-snap-type: y proximity;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: block;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 60px 10vw;
+            background: transparent;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: clamp(18px, 2vw, 32px);
+            letter-spacing: 2px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        nav .nav-left {
+            display: flex;
+            gap: clamp(40px, 8vw, 120px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        nav .nav-right {
+            display: flex;
+            gap: clamp(30px, 5vw, 80px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        nav a:hover {
+            color: #00d9ff;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        #canvas-container canvas {
+            pointer-events: none;
+        }
+
+        #content {
+            position: relative;
+            width: 100vw;
+            z-index: 10;
+            background: transparent;
+            padding: 0;
+            pointer-events: auto;
+        }
+
+        .section {
+            padding: 120px 60px 60px 60px;
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+        }
+
+        .small {
+            min-height: 5vh;
+            height: 5vh;
+        }
+
+        .section-title {
+            font-size: clamp(48px, 6vw, 80px);
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.2;
+        }
+
+
+        .stat-circle {
+            background: #000000;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+        }
+
+        .stat-circle .number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .stat-circle .label {
+            font-size: 14px;
+            color: #ffffff;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .gradient-section {
+            background: linear-gradient(180deg, #000000 0%, #73E333 95%, #000000 100%);
+        }
+
+        .final-text {
+            font-size: clamp(60px, 10vw, 120px);
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            z-index: 50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: 40px 30px;
+            }
+
+            .stats-container {
+                gap: 20px;
+            }
+
+            .stat-circle {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="index.html">HOME</a>
+            <a href="page2.html">THE FACTS</a>
+        </div>
+        <div class="nav-right">
+            <a href="#change">CHANGE</a>
+            <a href="#future">THE FUTURE</a>
+        </div>
+    </nav>
+
+    <div id="canvas-container">
+        <div id="loading">Loading 3D model...</div>
+    </div>
+
+    <div id="content">
+        <!-- Section 1: A New Pill, A New Approach -->
+        <section class="small section" id="section1">
+            <div class="section-title">A NEW PILL, A NEW APPROACH</div>
+        </section>
+
+        <!-- Section 2: The Controversy Behind the Headlines -->
+        <section class="section" id="section2">
+            <div class="section-title">THE CONTROVERSY BEHIND THE HEADLINES</div>
+        </section>
+
+        <!-- Section 3: Trust is the Real Side Effect (Green gradient starts) -->
+        <div class="gradient-section">
+            <section class="section" id="section3">
+                <div class="section-title">TRUST IS THE REAL SIDE EFFECT</div>
+            </section>
+
+            <!-- Section 4: Success Isn't Guaranteed -->
+            <section class="section" id="section4">
+                <div class="section-title">AND SUCCESS ISN'T GUARANTEED</div>
+            </section>
+        </div>
+
+        <!-- Section 5: The Pill Exists -->
+        <section class="section" id="section5">
+            <div class="section-title">THE PILL EXISTS</div>
+        </section>
+
+        <!-- Section 6: The Interest is Real -->
+        <div class="gradient-section">
+            <section class="section" id="section6">
+                <div class="section-title">THE INTEREST IS REAL</div>
+            </section>
+
+            <!-- Section 7: The Hesitation is Clear -->
+            <section class="section" id="section7">
+                <div class="section-title">THE HESITATION IS CLEAR</div>
+            </section>
+
+            <!-- Section 8: Why Not? -->
+            <section class="section" id="section8">
+                <div class="section-title">WHY<br><br>NOT?</div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="scene2.js"></script>
+    <script src="animations2.js"></script>
+</body>
+</html>
