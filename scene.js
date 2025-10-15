@@ -51,16 +51,13 @@ rimLight.position.set(-2, 0, -8);
 scene.add(rimLight);
 
 // Variables for animation
-let pillModel = null;
+let blueRoundModel = null;
+let blueTextModel = null;
 let redPillModel = null;
 let whitePillModel = null;
-let redPillData = null;
-let whitePillData = null;
-let blueRoundData = null;
-let blueTextData = null;
+let modelsLoaded = 0;
 let mixer = null;
 const clock = new THREE.Clock();
-let currentPillType = 'text'; // Track which pill is currently shown
 
 // Mobile scaling factor
 let mobileScaleFactor = 1;
@@ -125,16 +122,17 @@ function setupPillMaterial(model) {
 // Load GLTF model
 const loader = new THREE.GLTFLoader();
 
-// Load non-text blue pill (initial version - before text range)
+// Load non-text blue pill
 loader.load('./assets/blueRound.gltf', function(gltf) {
-    pillModel = gltf.scene;
-    blueRoundData = gltf.scene.clone();
-    pillModel.scale.set(20, 20, 20);
-    pillModel.position.set(-2, 0, 0);
-    setupPillMaterial(pillModel);
-    scene.add(pillModel);
-    currentPillType = 'notext';
-    document.getElementById('loading').style.display = 'none';
+    blueRoundModel = gltf.scene;
+    blueRoundModel.scale.set(20, 20, 20);
+    blueRoundModel.position.set(-2, 0, 0);
+    setupPillMaterial(blueRoundModel);
+    scene.add(blueRoundModel);
+    modelsLoaded++;
+    if (modelsLoaded === 1) {
+        document.getElementById('loading').style.display = 'none';
+    }
     console.log('Blue pill (no text) loaded successfully');
 }, function(progress) {
     console.log('Blue pill loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -143,25 +141,33 @@ loader.load('./assets/blueRound.gltf', function(gltf) {
     document.getElementById('loading').textContent = 'Error loading 3D model';
 });
 
-// Preload text blue pill for swap
+// Load text blue pill
 loader.load('./assets/bluetext.gltf', function(gltf) {
-    blueTextData = gltf.scene;
-    console.log('Blue pill with text preloaded successfully');
+    blueTextModel = gltf.scene;
+    blueTextModel.scale.set(20, 20, 20);
+    blueTextModel.position.set(-2, 0, 0);
+    setupPillMaterial(blueTextModel);
+    // Add to scene and immediately remove to force GPU compilation
+    scene.add(blueTextModel);
+    renderer.render(scene, camera);
+    scene.remove(blueTextModel);
+    modelsLoaded++;
+    console.log('Blue pill with text loaded successfully');
 }, function(progress) {
     console.log('Blue pill (text) loading progress:', (progress.loaded / progress.total * 100) + '%');
 }, function(error) {
-    console.error('Error preloading blue pill (text):', error);
+    console.error('Error loading blue pill (text):', error);
 });
 
 // Load red pill
 loader.load('./assets/RedLong.gltf', function(gltf) {
-    redPillData = gltf.scene.clone();
     redPillModel = gltf.scene;
     redPillModel.scale.set(5, 5, 5);
     redPillModel.position.set(-8, 1, 0);
     redPillModel.rotation.set(0, 0, -0.5);
     setupPillMaterial(redPillModel);
     scene.add(redPillModel);
+    modelsLoaded++;
     console.log('Red pill loaded successfully');
 }, function(progress) {
     console.log('Red pill loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -171,13 +177,13 @@ loader.load('./assets/RedLong.gltf', function(gltf) {
 
 // Load white pill
 loader.load('./assets/longWhite.gltf', function(gltf) {
-    whitePillData = gltf.scene.clone();
     whitePillModel = gltf.scene;
     whitePillModel.scale.set(5, 5, 5);
     whitePillModel.position.set(4, 1, 0);
     whitePillModel.rotation.set(0, 0, 0.5);
     setupPillMaterial(whitePillModel);
     scene.add(whitePillModel);
+    modelsLoaded++;
     console.log('White pill loaded successfully');
 }, function(progress) {
     console.log('White pill loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -193,8 +199,7 @@ camera.lookAt(-2, 0, 0);
 let time = 0;
 let scrollY = 0;
 
-// Create debug panel (disabled)
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 let debugPanel;
 if (DEBUG_MODE) {
@@ -243,11 +248,14 @@ let isInteracting = false;
 // Define scroll-based positions for each section
 const scrollPositions = [
     { y: window.innerHeight * 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 3.5, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
-    { y: window.innerHeight * 0.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
-    { y: window.innerHeight * 1.32, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
-    { y: window.innerHeight * 2.4, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
-    { y: window.innerHeight * 3.32, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
-    { y: window.innerHeight * 3.85, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
+    { y: window.innerHeight * 1.2, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.5, z: 3 }, scale: { x: 12, y: 12, z: 12 } },
+    { y: window.innerHeight * 2.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: -3, z: 0 }, scale: { x: 5, y: 5, z: 5 } },
+    { y: window.innerHeight * 3.10, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
+    { y: window.innerHeight * 4.12, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
+    { y: window.innerHeight * 5.31, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
+    { y: window.innerHeight * 5.86, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
+    { y: window.innerHeight * 6.5, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } },
+    { y: window.innerHeight * 8, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -3.5, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
 ];
 
 // Define scroll-based positions for red and white pills
@@ -446,107 +454,122 @@ function animate() {
     const delta = clock.getDelta();
     time += delta;
 
-    if (pillModel) {
-        // Calculate scroll multiplier
-        const scrollMultiplier = scrollY / window.innerHeight;
+    // Calculate scroll multiplier
+    const scrollMultiplier = scrollY / window.innerHeight;
 
-        // Swap between text and non-text pill based on scroll position
-        if (scrollMultiplier >= 0 && scrollMultiplier <= 0.85) {
-            // Show text pill in this range
-            if (currentPillType !== 'text' && blueTextData) {
-                const currentPos = pillModel.position.clone();
-                const currentRot = pillModel.rotation.clone();
-                const currentScale = pillModel.scale.clone();
+    // Determine which blue pill should be visible
+    const shouldShowTextPill = scrollMultiplier >= 2.65 && scrollMultiplier <= 4.15;
 
-                scene.remove(pillModel);
-                pillModel = blueTextData.clone();
-                pillModel.position.copy(currentPos);
-                pillModel.rotation.copy(currentRot);
-                pillModel.scale.copy(currentScale);
-                setupPillMaterial(pillModel);
-                scene.add(pillModel);
-                currentPillType = 'text';
-                console.log('Swapped to text pill');
+    // Breathing effect calculation (shared)
+    const breathingScale = 1 + Math.sin(time * 2) * 0.02;
+
+    // Get interpolated values based on scroll
+    const interpolated = getInterpolatedValues(scrollY);
+
+    // Update debug panel
+    updateDebugPanel(interpolated, scrollY);
+
+    // Manage blue round pill visibility
+    if (blueRoundModel) {
+        if (shouldShowTextPill) {
+            // Hide round pill when text pill should be visible
+            if (blueRoundModel.parent === scene) {
+                scene.remove(blueRoundModel);
             }
         } else {
-            // Show non-text pill outside this range
-            if (currentPillType !== 'notext' && blueRoundData) {
-                const currentPos = pillModel.position.clone();
-                const currentRot = pillModel.rotation.clone();
-                const currentScale = pillModel.scale.clone();
-
-                scene.remove(pillModel);
-                pillModel = blueRoundData.clone();
-                pillModel.position.copy(currentPos);
-                pillModel.rotation.copy(currentRot);
-                pillModel.scale.copy(currentScale);
-                setupPillMaterial(pillModel);
-                scene.add(pillModel);
-                currentPillType = 'notext';
-                console.log('Swapped to non-text pill');
+            // Show round pill
+            if (blueRoundModel.parent !== scene) {
+                scene.add(blueRoundModel);
             }
-        }
 
-        // Get interpolated values based on scroll
-        const interpolated = getInterpolatedValues(scrollY);
+            // Apply scroll-based position and rotation with mobile adjustment
+            // Keep -2 as center, only scale the deviation from center
+            const centerX = -2;
+            const deviationFromCenter = (interpolated.position.x - centerX) * mobileMovementFactor;
+            const floatingXOffset = Math.cos(time * 1) * 0.1 * mobileMovementFactor;
+            blueRoundModel.position.x = centerX + deviationFromCenter + floatingXOffset;
+            blueRoundModel.position.y = interpolated.position.y + Math.sin(time * 1.5) * 0.15;
+            blueRoundModel.position.z = interpolated.position.z;
 
-        // Update debug panel
-        updateDebugPanel(interpolated, scrollY);
+            blueRoundModel.rotation.x = interpolated.rotation.x + Math.sin(time * 0.5) * 0.05;
+            blueRoundModel.rotation.y = interpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
+            blueRoundModel.rotation.z = interpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
 
-        // Apply scroll-based position and rotation with mobile adjustment
-        // Keep -2 as center, only scale the deviation from center
-        const centerX = -2;
-        const deviationFromCenter = (interpolated.position.x - centerX) * mobileMovementFactor;
-        const floatingXOffset = Math.cos(time * 1) * 0.1 * mobileMovementFactor;
-        pillModel.position.x = centerX + deviationFromCenter + floatingXOffset;
-        pillModel.position.y = interpolated.position.y + Math.sin(time * 1.5) * 0.15;
-        pillModel.position.z = interpolated.position.z;
-
-        pillModel.rotation.x = interpolated.rotation.x + Math.sin(time * 0.5) * 0.05;
-        pillModel.rotation.y = interpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
-        pillModel.rotation.z = interpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
-
-        // Apply scroll-based scale with subtle breathing effect and mobile scaling
-        const breathingScale = 1 + Math.sin(time * 2) * 0.02; // 2% breathing effect
-        pillModel.scale.x = interpolated.scale.x * breathingScale * mobileScaleFactor;
-        pillModel.scale.y = interpolated.scale.y * breathingScale * mobileScaleFactor;
-        pillModel.scale.z = interpolated.scale.z * breathingScale * mobileScaleFactor;
-
-        // Update directional light target to follow the pill
-        directionalLight.target.position.x = pillModel.position.x;
-        directionalLight.target.position.y = pillModel.position.y;
-        directionalLight.target.position.z = pillModel.position.z;
-
-        // Update rim light position to maintain consistent backlighting
-        rimLight.position.x = pillModel.position.x;
-        rimLight.position.y = pillModel.position.y;
-        rimLight.position.z = pillModel.position.z - 8;
-
-        // Sync home-content with pill wobble and movement
-        const homeContent = document.querySelector('#home .home-content');
-        if (homeContent && scrollY < window.innerHeight * 0.35) {
-            const wobbleX = Math.cos(time * 1) * 0.1;
-            const wobbleY = Math.sin(time * 1.5) * 0.15;
-            const currentScale = interpolated.scale.x * breathingScale / 100; // Normalize scale
-
-            homeContent.style.transform = `
-                rotate(30deg)
-                translate(${wobbleX * 50}px, ${wobbleY * 50}px)
-                scale(${currentScale})
-            `;
+            // Apply scroll-based scale with subtle breathing effect and mobile scaling
+            blueRoundModel.scale.x = interpolated.scale.x * breathingScale * mobileScaleFactor;
+            blueRoundModel.scale.y = interpolated.scale.y * breathingScale * mobileScaleFactor;
+            blueRoundModel.scale.z = interpolated.scale.z * breathingScale * mobileScaleFactor;
         }
     }
 
-    // Animate red pill based on scroll
-    if (scrollY < redPillPositions[1].y) {
-        // Re-add if scrolled back to top
-        if (!redPillModel && redPillData) {
-            redPillModel = redPillData.clone();
-            setupPillMaterial(redPillModel);
-            scene.add(redPillModel);
-        }
+    // Manage blue text pill visibility
+    if (blueTextModel) {
+        if (!shouldShowTextPill) {
+            // Hide text pill when round pill should be visible
+            if (blueTextModel.parent === scene) {
+                scene.remove(blueTextModel);
+            }
+        } else {
+            // Show text pill
+            if (blueTextModel.parent !== scene) {
+                scene.add(blueTextModel);
+            }
 
-        if (redPillModel) {
+            // Apply scroll-based position and rotation with mobile adjustment
+            // Keep -2 as center, only scale the deviation from center
+            const centerX = -2;
+            const deviationFromCenter = (interpolated.position.x - centerX) * mobileMovementFactor;
+            const floatingXOffset = Math.cos(time * 1) * 0.1 * mobileMovementFactor;
+            blueTextModel.position.x = centerX + deviationFromCenter + floatingXOffset;
+            blueTextModel.position.y = interpolated.position.y + Math.sin(time * 1.5) * 0.15;
+            blueTextModel.position.z = interpolated.position.z;
+
+            blueTextModel.rotation.x = interpolated.rotation.x + Math.sin(time * 0.5) * 0.05;
+            blueTextModel.rotation.y = interpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
+            blueTextModel.rotation.z = interpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
+
+            // Apply scroll-based scale with subtle breathing effect and mobile scaling
+            blueTextModel.scale.x = interpolated.scale.x * breathingScale * mobileScaleFactor;
+            blueTextModel.scale.y = interpolated.scale.y * breathingScale * mobileScaleFactor;
+            blueTextModel.scale.z = interpolated.scale.z * breathingScale * mobileScaleFactor;
+        }
+    }
+
+    // Update directional light target to follow the active blue pill
+    const activeBluePill = shouldShowTextPill ? blueTextModel : blueRoundModel;
+    if (activeBluePill && activeBluePill.parent === scene) {
+        directionalLight.target.position.x = activeBluePill.position.x;
+        directionalLight.target.position.y = activeBluePill.position.y;
+        directionalLight.target.position.z = activeBluePill.position.z;
+
+        // Update rim light position to maintain consistent backlighting
+        rimLight.position.x = activeBluePill.position.x;
+        rimLight.position.y = activeBluePill.position.y;
+        rimLight.position.z = activeBluePill.position.z - 8;
+    }
+
+    // Sync home-content with pill wobble and movement
+    const homeContent = document.querySelector('#home .home-content');
+    if (homeContent && scrollY < window.innerHeight * 0.35) {
+        const wobbleX = Math.cos(time * 1) * 0.1;
+        const wobbleY = Math.sin(time * 1.5) * 0.15;
+        const currentScale = interpolated.scale.x * breathingScale / 100; // Normalize scale
+
+        homeContent.style.transform = `
+            rotate(30deg)
+            translate(${wobbleX * 50}px, ${wobbleY * 50}px)
+            scale(${currentScale})
+        `;
+    }
+
+    // Animate red pill based on scroll
+    if (redPillModel) {
+        if (scrollY < redPillPositions[1].y) {
+            // Show red pill
+            if (redPillModel.parent !== scene) {
+                scene.add(redPillModel);
+            }
+
             const current = redPillPositions[0];
             const next = redPillPositions[1];
             const progress = scrollY / next.y;
@@ -564,23 +587,22 @@ function animate() {
             redPillModel.scale.x = lerp(current.scale.x, next.scale.x, eased) * mobileScaleFactor;
             redPillModel.scale.y = lerp(current.scale.y, next.scale.y, eased) * mobileScaleFactor;
             redPillModel.scale.z = lerp(current.scale.z, next.scale.z, eased) * mobileScaleFactor;
+        } else {
+            // Hide red pill when off screen
+            if (redPillModel.parent === scene) {
+                scene.remove(redPillModel);
+            }
         }
-    } else if (redPillModel) {
-        // De-render when fully off screen
-        scene.remove(redPillModel);
-        redPillModel = null;
     }
 
     // Animate white pill based on scroll
-    if (scrollY < whitePillPositions[1].y) {
-        // Re-add if scrolled back to top
-        if (!whitePillModel && whitePillData) {
-            whitePillModel = whitePillData.clone();
-            setupPillMaterial(whitePillModel);
-            scene.add(whitePillModel);
-        }
+    if (whitePillModel) {
+        if (scrollY < whitePillPositions[1].y) {
+            // Show white pill
+            if (whitePillModel.parent !== scene) {
+                scene.add(whitePillModel);
+            }
 
-        if (whitePillModel) {
             const current = whitePillPositions[0];
             const next = whitePillPositions[1];
             const progress = scrollY / next.y;
@@ -598,11 +620,12 @@ function animate() {
             whitePillModel.scale.x = lerp(current.scale.x, next.scale.x, eased) * mobileScaleFactor;
             whitePillModel.scale.y = lerp(current.scale.y, next.scale.y, eased) * mobileScaleFactor;
             whitePillModel.scale.z = lerp(current.scale.z, next.scale.z, eased) * mobileScaleFactor;
+        } else {
+            // Hide white pill when off screen
+            if (whitePillModel.parent === scene) {
+                scene.remove(whitePillModel);
+            }
         }
-    } else if (whitePillModel) {
-        // De-render when fully off screen
-        scene.remove(whitePillModel);
-        whitePillModel = null;
     }
 
     renderer.render(scene, camera);

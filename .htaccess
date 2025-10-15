@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect /the-facts to page2.html
+RewriteRule ^the-facts$ page2.html [L]
+
+# Default to index.html for root
+DirectoryIndex index.html
