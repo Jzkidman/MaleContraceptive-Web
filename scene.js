@@ -62,6 +62,17 @@ let mixer = null;
 const clock = new THREE.Clock();
 let currentPillType = 'text'; // Track which pill is currently shown
 
+// Mobile scaling factor
+let mobileScaleFactor = 1;
+function updateMobileScaleFactor() {
+    if (window.innerWidth <= 768) {
+        mobileScaleFactor = window.innerWidth / 768;
+    } else {
+        mobileScaleFactor = 1;
+    }
+}
+updateMobileScaleFactor();
+
 // Helper function to setup pill materials
 function setupPillMaterial(model) {
     model.traverse(function(child) {
@@ -488,11 +499,11 @@ function animate() {
         pillModel.rotation.y = interpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
         pillModel.rotation.z = interpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
 
-        // Apply scroll-based scale with subtle breathing effect
+        // Apply scroll-based scale with subtle breathing effect and mobile scaling
         const breathingScale = 1 + Math.sin(time * 2) * 0.02; // 2% breathing effect
-        pillModel.scale.x = interpolated.scale.x * breathingScale;
-        pillModel.scale.y = interpolated.scale.y * breathingScale;
-        pillModel.scale.z = interpolated.scale.z * breathingScale;
+        pillModel.scale.x = interpolated.scale.x * breathingScale * mobileScaleFactor;
+        pillModel.scale.y = interpolated.scale.y * breathingScale * mobileScaleFactor;
+        pillModel.scale.z = interpolated.scale.z * breathingScale * mobileScaleFactor;
 
         // Update directional light target to follow the pill
         directionalLight.target.position.x = pillModel.position.x;
@@ -543,9 +554,9 @@ function animate() {
             redPillModel.rotation.y = lerp(current.rotation.y, next.rotation.y, eased) + Math.cos(time * 0.8) * 0.05;
             redPillModel.rotation.z = lerp(current.rotation.z, next.rotation.z, eased) + Math.sin(time * 1.2) * 0.1;
 
-            redPillModel.scale.x = lerp(current.scale.x, next.scale.x, eased);
-            redPillModel.scale.y = lerp(current.scale.y, next.scale.y, eased);
-            redPillModel.scale.z = lerp(current.scale.z, next.scale.z, eased);
+            redPillModel.scale.x = lerp(current.scale.x, next.scale.x, eased) * mobileScaleFactor;
+            redPillModel.scale.y = lerp(current.scale.y, next.scale.y, eased) * mobileScaleFactor;
+            redPillModel.scale.z = lerp(current.scale.z, next.scale.z, eased) * mobileScaleFactor;
         }
     } else if (redPillModel) {
         // De-render when fully off screen
@@ -577,9 +588,9 @@ function animate() {
             whitePillModel.rotation.y = lerp(current.rotation.y, next.rotation.y, eased) + Math.cos(time * 0.8) * 0.05;
             whitePillModel.rotation.z = lerp(current.rotation.z, next.rotation.z, eased) + Math.sin(time * 1.1) * 0.1;
 
-            whitePillModel.scale.x = lerp(current.scale.x, next.scale.x, eased);
-            whitePillModel.scale.y = lerp(current.scale.y, next.scale.y, eased);
-            whitePillModel.scale.z = lerp(current.scale.z, next.scale.z, eased);
+            whitePillModel.scale.x = lerp(current.scale.x, next.scale.x, eased) * mobileScaleFactor;
+            whitePillModel.scale.y = lerp(current.scale.y, next.scale.y, eased) * mobileScaleFactor;
+            whitePillModel.scale.z = lerp(current.scale.z, next.scale.z, eased) * mobileScaleFactor;
         }
     } else if (whitePillModel) {
         // De-render when fully off screen
@@ -595,6 +606,9 @@ window.addEventListener('resize', function() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Update mobile scale factor
+    updateMobileScaleFactor();
 
     // Update scroll positions based on new window height
     scrollPositions[0].y = window.innerHeight * 0.0;

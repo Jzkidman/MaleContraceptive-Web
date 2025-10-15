@@ -66,6 +66,17 @@ const clock = new THREE.Clock();
 let time = 0;
 let scrollY = 0;
 
+// Mobile scaling factor
+let mobileScaleFactor = 1;
+function updateMobileScaleFactor() {
+    if (window.innerWidth <= 768) {
+        mobileScaleFactor = window.innerWidth / 768;
+    } else {
+        mobileScaleFactor = 1;
+    }
+}
+updateMobileScaleFactor();
+
 // Create debug panel
 const DEBUG_MODE = false;
 
@@ -578,10 +589,10 @@ function animate() {
             redPillModel.rotation.y = redInterpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
             redPillModel.rotation.z = redInterpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
 
-            // Apply scroll-based scale with subtle breathing effect
-            redPillModel.scale.x = redInterpolated.scale.x * breathingScale;
-            redPillModel.scale.y = redInterpolated.scale.y * breathingScale;
-            redPillModel.scale.z = redInterpolated.scale.z * breathingScale;
+            // Apply scroll-based scale with subtle breathing effect and mobile scaling
+            redPillModel.scale.x = redInterpolated.scale.x * breathingScale * mobileScaleFactor;
+            redPillModel.scale.y = redInterpolated.scale.y * breathingScale * mobileScaleFactor;
+            redPillModel.scale.z = redInterpolated.scale.z * breathingScale * mobileScaleFactor;
 
             // Apply opacity
             redPillModel.traverse(function(child) {
@@ -620,10 +631,10 @@ function animate() {
             greenPillTextModel.rotation.y = greenTextInterpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
             greenPillTextModel.rotation.z = greenTextInterpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
 
-            // Apply scroll-based scale with subtle breathing effect
-            greenPillTextModel.scale.x = greenTextInterpolated.scale.x * breathingScale;
-            greenPillTextModel.scale.y = greenTextInterpolated.scale.y * breathingScale;
-            greenPillTextModel.scale.z = greenTextInterpolated.scale.z * breathingScale;
+            // Apply scroll-based scale with subtle breathing effect and mobile scaling
+            greenPillTextModel.scale.x = greenTextInterpolated.scale.x * breathingScale * mobileScaleFactor;
+            greenPillTextModel.scale.y = greenTextInterpolated.scale.y * breathingScale * mobileScaleFactor;
+            greenPillTextModel.scale.z = greenTextInterpolated.scale.z * breathingScale * mobileScaleFactor;
 
             // Apply opacity
             greenPillTextModel.traverse(function(child) {
@@ -662,10 +673,10 @@ function animate() {
             greenPillPlainModel.rotation.y = greenPlainInterpolated.rotation.y + Math.cos(time * 0.8) * 0.05;
             greenPillPlainModel.rotation.z = greenPlainInterpolated.rotation.z + Math.sin(time * 0.3) * 0.03;
 
-            // Apply scroll-based scale with subtle breathing effect
-            greenPillPlainModel.scale.x = greenPlainInterpolated.scale.x * breathingScale;
-            greenPillPlainModel.scale.y = greenPlainInterpolated.scale.y * breathingScale;
-            greenPillPlainModel.scale.z = greenPlainInterpolated.scale.z * breathingScale;
+            // Apply scroll-based scale with subtle breathing effect and mobile scaling
+            greenPillPlainModel.scale.x = greenPlainInterpolated.scale.x * breathingScale * mobileScaleFactor;
+            greenPillPlainModel.scale.y = greenPlainInterpolated.scale.y * breathingScale * mobileScaleFactor;
+            greenPillPlainModel.scale.z = greenPlainInterpolated.scale.z * breathingScale * mobileScaleFactor;
 
             // Apply opacity
             greenPillPlainModel.traverse(function(child) {
@@ -735,6 +746,9 @@ window.addEventListener('resize', function() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Update mobile scale factor
+    updateMobileScaleFactor();
 
     // Update red pill scroll positions based on new window height
     redPillPositions[0].y = window.innerHeight * 0;
