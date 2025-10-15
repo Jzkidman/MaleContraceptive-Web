@@ -260,17 +260,90 @@
         }
 
         @media (max-width: 768px) {
+            nav {
+                padding: 30px 5vw;
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+
+            nav .nav-left,
+            nav .nav-right {
+                gap: 20px;
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 16px;
+            }
+
             .section {
-                padding: 40px 30px;
+                padding: 60px 20px 40px 20px;
+                min-height: 80vh;
+                height: auto;
+            }
+
+            .section-title {
+                font-size: 36px;
+                margin-bottom: 30px;
             }
 
             .stats-container {
                 gap: 20px;
+                flex-direction: column;
+                align-items: center;
             }
 
             .stat-circle {
                 width: 150px;
                 height: 150px;
+            }
+
+            .stat-circle .number {
+                font-size: 36px;
+            }
+
+            .stat-circle .label {
+                font-size: 12px;
+            }
+
+            .lower {
+                margin-bottom: 300px;
+            }
+
+            .final-section .so-text {
+                font-size: 48px;
+                margin-bottom: 150px;
+                letter-spacing: 4px;
+            }
+
+            .final-section .why-not {
+                font-size: 96px;
+                margin-bottom: 250px;
+                top: -150px;
+            }
+
+            footer {
+                margin-top: 150px;
+            }
+
+            footer .learn-more {
+                font-size: 14px;
+                margin-bottom: 30px;
+            }
+
+            footer .links {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px 0 40px 0;
+            }
+
+            footer a {
+                font-size: 12px;
+            }
+
+            #section5 {
+                margin-top: 250px !important;
             }
         }
     </style>
