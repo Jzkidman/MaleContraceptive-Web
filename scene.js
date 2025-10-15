@@ -55,7 +55,7 @@ let blueRoundModel = null;
 let blueTextModel = null;
 let redPillModel = null;
 let whitePillModel = null;
-let sceneModelsLoaded = 0;
+let modelsLoaded = 0;
 let mixer = null;
 const clock = new THREE.Clock();
 
@@ -129,8 +129,8 @@ loader.load('./assets/blueRound.gltf', function(gltf) {
     blueRoundModel.position.set(-2, 0, 0);
     setupPillMaterial(blueRoundModel);
     scene.add(blueRoundModel);
-    sceneModelsLoaded++;
-    if (sceneModelsLoaded === 1) {
+    modelsLoaded++;
+    if (modelsLoaded === 1) {
         document.getElementById('loading').style.display = 'none';
     }
     console.log('Blue pill (no text) loaded successfully');
@@ -151,7 +151,7 @@ loader.load('./assets/bluetext.gltf', function(gltf) {
     scene.add(blueTextModel);
     renderer.render(scene, camera);
     scene.remove(blueTextModel);
-    sceneModelsLoaded++;
+    modelsLoaded++;
     console.log('Blue pill with text loaded successfully');
 }, function(progress) {
     console.log('Blue pill (text) loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -167,7 +167,7 @@ loader.load('./assets/RedLong.gltf', function(gltf) {
     redPillModel.rotation.set(0, 0, -0.5);
     setupPillMaterial(redPillModel);
     scene.add(redPillModel);
-    sceneModelsLoaded++;
+    modelsLoaded++;
     console.log('Red pill loaded successfully');
 }, function(progress) {
     console.log('Red pill loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -183,7 +183,7 @@ loader.load('./assets/longWhite.gltf', function(gltf) {
     whitePillModel.rotation.set(0, 0, 0.5);
     setupPillMaterial(whitePillModel);
     scene.add(whitePillModel);
-    sceneModelsLoaded++;
+    modelsLoaded++;
     console.log('White pill loaded successfully');
 }, function(progress) {
     console.log('White pill loading progress:', (progress.loaded / progress.total * 100) + '%');
