@@ -146,7 +146,7 @@ function createPillStorm() {
             finalZ: config.position.z,
             typeIndex: config.type,
             speed: 0.4 + (i * 0.01), // Slight variation in speed
-            floatOffset: i * 0.3, // Staggered floating
+            floatOffset: i * 30, // Staggered floating
             finalRotation: config.rotation,
             scale: config.scale,
             progress: 0,
@@ -167,17 +167,34 @@ function createPillStorm() {
 const stormClock = new THREE.Clock();
 let stormActive = false;
 let stormTime = 0;
+let scrollProgress = 0; // 0 = not started, 1 = fully visible
 
-// Get scroll position of pill storm section
-function isStormSectionVisible() {
+// Get scroll progress of pill storm section
+function getStormScrollProgress() {
     const stormSection = document.getElementById('pill-storm');
-    if (!stormSection) return false;
+    if (!stormSection) return 0;
 
     const rect = stormSection.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // Check if section is in viewport
-    return rect.top < windowHeight && rect.bottom > 0;
+    // Calculate how far into the section we've scrolled
+    // Returns 0 when section just enters viewport from bottom
+    // Returns 1 when section is centered in viewport
+    if (rect.bottom < 0) {
+        // Section is above viewport (scrolled past)
+        return 1;
+    } else if (rect.top > windowHeight) {
+        // Section is below viewport (not reached yet)
+        return 0;
+    } else {
+        // Section is in viewport - calculate progress
+        // Progress increases as section moves up
+        // Start animation when section is 30% into viewport
+        const startThreshold = windowHeight * 0.3;
+        const visibleTop = Math.max(0, windowHeight - rect.top - startThreshold);
+        const progress = Math.min(1, visibleTop / (windowHeight * 0.8));
+        return Math.max(0, Math.min(1, progress));
+    }
 }
 
 // Easing function for smooth arrival
@@ -190,62 +207,46 @@ function animateStorm() {
     requestAnimationFrame(animateStorm);
 
     const delta = stormClock.getDelta();
-    stormActive = isStormSectionVisible();
+    scrollProgress = getStormScrollProgress();
 
-    if (stormActive && pills.length > 0) {
+    if (pills.length > 0) {
         stormTime += delta;
 
-        pills.forEach(pillData => {
-            // Wait for delay before starting
-            const effectiveTime = Math.max(0, stormTime - pillData.delay);
+        pills.forEach((pillData, i) => {
+            // Calculate individual pill progress with staggered delay
+            const delayedProgress = Math.max(0, Math.min(1, (scrollProgress - pillData.delay * 0.3) / (1 - pillData.delay * 0.3)));
+            const easedProgress = easeOutCubic(delayedProgress);
 
-            if (!pillData.hasArrived) {
-                // Move to final position
-                pillData.progress = Math.min(1, effectiveTime * pillData.speed);
-                const easedProgress = easeOutCubic(pillData.progress);
+            // Interpolate position based on scroll progress
+            pillData.mesh.position.x = pillData.startX + (pillData.finalX - pillData.startX) * easedProgress;
 
-                // Interpolate position
-                pillData.mesh.position.x = pillData.startX + (pillData.finalX - pillData.startX) * easedProgress;
-
-                // Interpolate rotation to final rotation
-                pillData.mesh.rotation.set(
-                    pillData.finalRotation.x * easedProgress,
-                    pillData.finalRotation.y * easedProgress,
-                    pillData.finalRotation.z * easedProgress
-                );
-
-                // Fade in
-                pillData.mesh.traverse(child => {
-                    if (child.isMesh && child.material) {
-                        child.material.transparent = true;
-                        child.material.opacity = Math.min(1, pillData.progress * 2);
-                    }
-                });
-
-                // Check if arrived
-                if (pillData.progress >= 1) {
-                    pillData.hasArrived = true;
-                }
-            } else {
-                // Very subtle floating motion when arrived
+            // Add subtle floating motion when at final position
+            if (easedProgress > 0.95) {
                 const floatX = Math.sin(stormTime * 0.3 + pillData.floatOffset) * 0.15;
                 const floatY = Math.cos(stormTime * 0.4 + pillData.floatOffset) * 0.15;
 
-                pillData.mesh.position.x = pillData.finalX + floatX;
-                pillData.mesh.position.y = pillData.finalY + floatY;
-                pillData.mesh.position.z = pillData.finalZ;
-
-                // Keep final rotation - no spinning
-                pillData.mesh.rotation.set(pillData.finalRotation.x, pillData.finalRotation.y, pillData.finalRotation.z);
-
-                // Full opacity
-                pillData.mesh.traverse(child => {
-                    if (child.isMesh && child.material) {
-                        child.material.transparent = true;
-                        child.material.opacity = 1;
-                    }
-                });
+                pillData.mesh.position.x += floatX * easedProgress;
+                pillData.mesh.position.y = pillData.finalY + floatY * easedProgress;
+            } else {
+                pillData.mesh.position.y = pillData.finalY;
             }
+
+            pillData.mesh.position.z = pillData.finalZ;
+
+            // Interpolate rotation to final rotation
+            pillData.mesh.rotation.set(
+                pillData.finalRotation.x * easedProgress,
+                pillData.finalRotation.y * easedProgress,
+                pillData.finalRotation.z * easedProgress
+            );
+
+            // Fade in/out based on progress
+            pillData.mesh.traverse(child => {
+                if (child.isMesh && child.material) {
+                    child.material.transparent = true;
+                    child.material.opacity = Math.min(1, easedProgress * 2);
+                }
+            });
         });
 
         stormRenderer.render(stormScene, stormCamera);

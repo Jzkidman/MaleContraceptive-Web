@@ -64,11 +64,14 @@ let currentPillType = 'text'; // Track which pill is currently shown
 
 // Mobile scaling factor
 let mobileScaleFactor = 1;
+let mobileMovementFactor = 1;
 function updateMobileScaleFactor() {
     if (window.innerWidth <= 768) {
         mobileScaleFactor = window.innerWidth / 768;
+        mobileMovementFactor = 0.3; // Reduce x-axis movement to 30% on mobile
     } else {
         mobileScaleFactor = 1;
+        mobileMovementFactor = 1;
     }
 }
 updateMobileScaleFactor();
@@ -490,8 +493,12 @@ function animate() {
         // Update debug panel
         updateDebugPanel(interpolated, scrollY);
 
-        // Apply scroll-based position and rotation
-        pillModel.position.x = interpolated.position.x + Math.cos(time * 1) * 0.1;
+        // Apply scroll-based position and rotation with mobile adjustment
+        // Keep -2 as center, only scale the deviation from center
+        const centerX = -2;
+        const deviationFromCenter = (interpolated.position.x - centerX) * mobileMovementFactor;
+        const floatingXOffset = Math.cos(time * 1) * 0.1 * mobileMovementFactor;
+        pillModel.position.x = centerX + deviationFromCenter + floatingXOffset;
         pillModel.position.y = interpolated.position.y + Math.sin(time * 1.5) * 0.15;
         pillModel.position.z = interpolated.position.z;
 
