@@ -174,7 +174,7 @@ function setupPillMaterial(model) {
 const loader = new THREE.GLTFLoader();
 
 // Load red pill with text
-loader.load('./assets/pg2/redpill_text.gltf', function(gltf) {
+loader.load('assets/pg2/redpill_text.gltf', function(gltf) {
     redPillModel = gltf.scene;
     redPillModel.scale.set(15, 15, 15);
     redPillModel.position.set(0, 0, 0);
@@ -194,7 +194,7 @@ loader.load('./assets/pg2/redpill_text.gltf', function(gltf) {
 });
 
 // Load green pill with text
-loader.load('./assets/pg2/greenpill_text.gltf', function(gltf) {
+loader.load('assets/pg2/greenpill_text.gltf', function(gltf) {
     greenPillTextModel = gltf.scene;
     greenPillTextModel.scale.set(15, 15, 15);
     greenPillTextModel.position.set(0, 0, 0);
@@ -217,7 +217,7 @@ loader.load('./assets/pg2/greenpill_text.gltf', function(gltf) {
 });
 
 // Load green pill plain (no text)
-loader.load('./assets/pg2/greenpill.gltf', function(gltf) {
+loader.load('assets/pg2/greenpill.gltf', function(gltf) {
     greenPillPlainModel = gltf.scene;
     greenPillPlainModel.scale.set(15, 15, 15);
     greenPillPlainModel.position.set(0, 0, 0);

@@ -183,7 +183,7 @@ function setupPillMaterial(model) {
 // Load blue pill model
 const loader = new THREE.GLTFLoader();
 
-loader.load('./assets/blueRound.gltf', function(gltf) {
+loader.load('assets/blueRound.gltf', function(gltf) {
     bluePillModel = gltf.scene;
     bluePillModel.scale.set(25, 25, 25);
     bluePillModel.position.set(0, 0, 0);

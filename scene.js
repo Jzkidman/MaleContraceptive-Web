@@ -123,7 +123,7 @@ function setupPillMaterial(model) {
 const loader = new THREE.GLTFLoader();
 
 // Load non-text blue pill
-loader.load('./assets/blueRound.gltf', function(gltf) {
+loader.load('assets/blueRound.gltf', function(gltf) {
     blueRoundModel = gltf.scene;
     blueRoundModel.scale.set(20, 20, 20);
     blueRoundModel.position.set(-2, 0, 0);
@@ -142,7 +142,7 @@ loader.load('./assets/blueRound.gltf', function(gltf) {
 });
 
 // Load text blue pill
-loader.load('./assets/bluetext.gltf', function(gltf) {
+loader.load('assets/blueText.gltf', function(gltf) {
     blueTextModel = gltf.scene;
     blueTextModel.scale.set(20, 20, 20);
     blueTextModel.position.set(-2, 0, 0);
@@ -160,7 +160,7 @@ loader.load('./assets/bluetext.gltf', function(gltf) {
 });
 
 // Load red pill
-loader.load('./assets/RedLong.gltf', function(gltf) {
+loader.load('assets/RedLong.gltf', function(gltf) {
     redPillModel = gltf.scene;
     redPillModel.scale.set(5, 5, 5);
     redPillModel.position.set(-8, 1, 0);
@@ -176,7 +176,7 @@ loader.load('./assets/RedLong.gltf', function(gltf) {
 });
 
 // Load white pill
-loader.load('./assets/longWhite.gltf', function(gltf) {
+loader.load('assets/longWhite.gltf', function(gltf) {
     whitePillModel = gltf.scene;
     whitePillModel.scale.set(5, 5, 5);
     whitePillModel.position.set(4, 1, 0);
