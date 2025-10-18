@@ -253,50 +253,75 @@ function lerp(start, end, factor) {
     return start + (end - start) * factor;
 }
 
-// Red pill positions (sections 0-2, fades out at 1.7)
-const redPillPositions = [
+// Red pill position multipliers (sections 0-2, fades out at 1.7)
+const redPillMultipliers = [
     // Section 1: A New Pill, A New Approach - Red pill front view
-    { y: window.innerHeight * 0, position: { x: 0, y: -1.5, z: 0 }, rotation: { x: 0, y: 0, z: -1.55 }, scale: { x: 100, y: 100, z: 100 }, opacity: 1 },
+    { multiplier: 0, position: { x: 0, y: -1.5, z: 0 }, rotation: { x: 0, y: 0, z: -1.55 }, scale: { x: 100, y: 100, z: 100 }, opacity: 1 },
 
     // Section 2: The Controversy - Red pill slight rotation
-    { y: window.innerHeight * 0.88, position: { x: 0, y: -1.5, z: 0 }, rotation: { x: 3.00, y: 0, z: 1.55 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { multiplier: 0.88, position: { x: 0, y: -1.5, z: 0 }, rotation: { x: 3.00, y: 0, z: 1.55 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
     // Fade out point
-    { y: window.innerHeight * 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 }
+    { multiplier: 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 }
 ];
 
-// Green pill with text positions (sections 2-3.5, fades out at 3.5)
-const greenPillTextPositions = [
+// Green pill with text position multipliers (sections 2-3.5, fades out at 3.5)
+const greenPillTextMultipliers = [
     // Start invisible at section 1.7
-    { y: window.innerHeight * 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 1, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 },
+    { multiplier: 1.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: 1, y: 0, z: 0 }, scale: { x: 30, y: 30, z: 30 }, opacity: 0 },
 
     // Section 3: Trust is the Real Side Effect - Fade in
-    { y: window.innerHeight * 2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { multiplier: 2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
-    { y: window.innerHeight * 2.6, position: { x: 0, y: 0, z: -0.56 }, rotation: { x: 1.40, y: 0.00, z: 0.00 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { multiplier: 2.6, position: { x: 0, y: 0, z: -0.56 }, rotation: { x: 1.40, y: 0.00, z: 0.00 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
     // Section 4: Success Isn't Guaranteed - Complete rotation (180 degrees)
-    { y: window.innerHeight * 3.2, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3.3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { multiplier: 3.2, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3.3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
-    { y: window.innerHeight * 3.6, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
+    { multiplier: 3.6, position: { x: 0, y: 0, z: -1 }, rotation: { x: 3, y: 0, z: 0 }, scale: { x: 90, y: 90, z: 90 }, opacity: 1 },
 
     // Fade out at 3.5
-    { y: window.innerHeight * 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 }
+    { multiplier: 4, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0 }
 ];
 
-// Green pill plain (no text) positions (sections 3.5-8, fades in at 4.0)
-const greenPillPlainPositions = [
+// Green pill plain (no text) position multipliers (sections 3.5-8, fades in at 4.0)
+const greenPillPlainMultipliers = [
     // Section 5: The Pill Exists - Fade in
-    { y: window.innerHeight * 3.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 4, y: 4, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0},
+    { multiplier: 3.8, position: { x: 0, y: 0, z: 0 }, rotation: { x: 4, y: 4, z: 0 }, scale: { x: 10, y: 10, z: 10 }, opacity: 0},
 
     // Section 6: The Interest is Real - Green pill continues
-    { y: window.innerHeight * 4.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 2.80, y: 3.24, z: 0.60 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
+    { multiplier: 4.7, position: { x: 0, y: 0, z: 0 }, rotation: { x: 2.80, y: 3.24, z: 0.60 }, scale: { x: 15, y: 15, z: 15 }, opacity: 1 },
 
-    { y: window.innerHeight * 5.46, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1},
-    { y: window.innerHeight * 7.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: -0.30, y: 3.14, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
-    { y: window.innerHeight * 8.2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 6.3, z: 0 }, scale: { x: 50, y: 50, z: 50 }, opacity: 1 }
+    { multiplier: 5.46, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0.00, y: 0.00, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1},
+    { multiplier: 7.6, position: { x: 0, y: 0, z: 0 }, rotation: { x: -0.30, y: 3.14, z: 0.80 }, scale: { x: 70, y: 70, z: 70 }, opacity: 1 },
+    { multiplier: 8.2, position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 6.3, z: 0 }, scale: { x: 50, y: 50, z: 50 }, opacity: 1 }
 
 ];
+
+// Calculate actual positions from multipliers
+let redPillPositions = redPillMultipliers.map(pos => ({
+    y: window.innerHeight * pos.multiplier,
+    position: pos.position,
+    rotation: pos.rotation,
+    scale: pos.scale,
+    opacity: pos.opacity
+}));
+
+let greenPillTextPositions = greenPillTextMultipliers.map(pos => ({
+    y: window.innerHeight * pos.multiplier,
+    position: pos.position,
+    rotation: pos.rotation,
+    scale: pos.scale,
+    opacity: pos.opacity
+}));
+
+let greenPillPlainPositions = greenPillPlainMultipliers.map(pos => ({
+    y: window.innerHeight * pos.multiplier,
+    position: pos.position,
+    rotation: pos.rotation,
+    scale: pos.scale,
+    opacity: pos.opacity
+}));
 
 // Helper function to get current section for a specific positions array
 function getCurrentSection(scrollY, positionsArray) {
@@ -750,28 +775,60 @@ window.addEventListener('resize', function() {
     // Update mobile scale factor
     updateMobileScaleFactor();
 
-    // Update red pill scroll positions based on new window height
-    redPillPositions[0].y = window.innerHeight * 0;
-    redPillPositions[1].y = window.innerHeight * 0.88;
-    redPillPositions[2].y = window.innerHeight * 1.7;
+    // Recalculate all scroll positions based on new window height
+    redPillPositions = redPillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
 
-    // Update green pill with text scroll positions based on new window height
-    greenPillTextPositions[0].y = window.innerHeight * 1.7;
-    greenPillTextPositions[1].y = window.innerHeight * 2;
-    greenPillTextPositions[2].y = window.innerHeight * 3.2;
-    greenPillTextPositions[3].y = window.innerHeight * 3.5;
+    greenPillTextPositions = greenPillTextMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
 
-    // Update green pill plain scroll positions based on new window height
-    greenPillPlainPositions[0].y = window.innerHeight * 3.5;
-    greenPillPlainPositions[1].y = window.innerHeight * 4;
-    greenPillPlainPositions[2].y = window.innerHeight * 5;
-    greenPillPlainPositions[3].y = window.innerHeight * 6;
-    greenPillPlainPositions[4].y = window.innerHeight * 7;
+    greenPillPlainPositions = greenPillPlainMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
 
     // Refresh GSAP ScrollTrigger if available
     if (typeof ScrollTrigger !== 'undefined') {
         ScrollTrigger.refresh();
     }
+});
+
+// Ensure scroll positions are calculated on load
+window.addEventListener('load', function() {
+    redPillPositions = redPillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
+    greenPillTextPositions = greenPillTextMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
+    greenPillPlainPositions = greenPillPlainMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale,
+        opacity: pos.opacity
+    }));
 });
 
 // Start animation
