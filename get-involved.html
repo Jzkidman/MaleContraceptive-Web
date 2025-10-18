@@ -15,6 +15,53 @@
             font-family: 'neue-haas-grotesk-display', sans-serif;
             height: 100vh;
             width: 100vw;
+            position: relative;
+            transition: background 1.5s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s ease-out;
+            z-index: 0;
+        }
+
+        body.instagram-active::before {
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                #d6249f 0%,
+                #fd5949 20%,
+                #000000 60%);
+            opacity: 1;
+        }
+
+        body.facebook-active::before {
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                #1877F2 0%,
+                #0d4a9f 30%,
+                #000000 60%);
+            opacity: 1;
+        }
+
+        body.twitter-active::before {
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                #1DA1F2 0%,
+                #0c7cc4 30%,
+                #000000 60%);
+            opacity: 1;
+        }
+
+        body.email-active::before {
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                #EA4335 0%,
+                #b33226 30%,
+                #000000 60%);
+            opacity: 1;
         }
 
         html {
@@ -296,5 +343,90 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="get-involved.js"></script>
+
+    <script>
+        // Social media icon background gradient effect
+        const socialIcons = document.querySelectorAll('.social-icon');
+        const body = document.body;
+        let activeClass = null;
+        let isClicked = false;
+
+        socialIcons.forEach(icon => {
+            // Get the icon type from class list
+            const iconType = Array.from(icon.classList).find(c =>
+                ['instagram', 'facebook', 'twitter', 'email'].includes(c)
+            );
+
+            // Mouse enter event - activate gradient
+            icon.addEventListener('mouseenter', (e) => {
+                if (!isClicked) {
+                    updateGradientPosition(e);
+                    setActiveBackground(iconType);
+                }
+            });
+
+            // Mouse move event - update gradient position
+            icon.addEventListener('mousemove', (e) => {
+                if (!isClicked) {
+                    updateGradientPosition(e);
+                }
+            });
+
+            // Mouse leave event - deactivate gradient if not clicked
+            icon.addEventListener('mouseleave', () => {
+                if (!isClicked) {
+                    clearActiveBackground();
+                }
+            });
+
+            // Click event - lock the gradient
+            icon.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent immediate navigation
+                updateGradientPosition(e);
+                setActiveBackground(iconType);
+                isClicked = true;
+
+                // Navigate after a short delay to show the effect
+                setTimeout(() => {
+                    window.open(icon.href, icon.target || '_self');
+                    // Reset after navigation attempt
+                    setTimeout(() => {
+                        isClicked = false;
+                        clearActiveBackground();
+                    }, 300);
+                }, 400);
+            });
+        });
+
+        function updateGradientPosition(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+            const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+
+            body.style.setProperty('--mouse-x', `${x}%`);
+            body.style.setProperty('--mouse-y', `${y}%`);
+        }
+
+        function setActiveBackground(type) {
+            clearActiveBackground();
+            activeClass = `${type}-active`;
+            body.classList.add(activeClass);
+        }
+
+        function clearActiveBackground() {
+            if (activeClass) {
+                body.classList.remove(activeClass);
+                activeClass = null;
+            }
+        }
+
+        // Clear gradient on body click outside of icons
+        body.addEventListener('click', (e) => {
+            if (!e.target.closest('.social-icon')) {
+                isClicked = false;
+                clearActiveBackground();
+            }
+        });
+    </script>
 </body>
 </html>
