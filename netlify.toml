@@ -1,0 +1,33 @@
+# Netlify configuration file
+
+[build]
+  # No build command needed for static site
+  publish = "."
+
+[[redirects]]
+  from = "/the-facts"
+  to = "/page2.html"
+  status = 200
+
+[[redirects]]
+  from = "/get-involved"
+  to = "/get-involved.html"
+  status = 200
+
+# Future redirect for CHANGE page
+# [[redirects]]
+#   from = "/change"
+#   to = "/change.html"
+#   status = 200
+
+# Serve index.html for root
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# Handle 404s
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404

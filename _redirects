@@ -1,0 +1,8 @@
+# Netlify redirects file for clean URLs
+
+# Route clean URLs to actual HTML files
+/the-facts    /page2.html    200
+/get-involved /get-involved.html    200
+
+# Placeholder for future CHANGE page (create change.html when ready)
+# /change       /change.html   200
