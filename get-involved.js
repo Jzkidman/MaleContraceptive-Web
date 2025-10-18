@@ -76,7 +76,7 @@ if (!isMobileDevice) {
         // Map to rotation angles (in radians)
         // Limit rotation range for more subtle effect
         // Inverted Y-axis for natural "pointing" behavior
-        targetRotationY = -mouseX * Math.PI * 0.3; // Left-right rotation (inverted)
+        targetRotationY = mouseX * Math.PI * 0.3; // Left-right rotation (inverted)
         targetRotationX = -mouseY * Math.PI * 0.2; // Up-down rotation (inverted)
     });
 }

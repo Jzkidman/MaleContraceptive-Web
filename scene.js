@@ -245,29 +245,55 @@ let manualOverrides = {};
 let lastSection = -1;
 let isInteracting = false;
 
-// Define scroll-based positions for each section
-const scrollPositions = [
-    { y: window.innerHeight * 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 3.5, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
-    { y: window.innerHeight * 1.2, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.5, z: 3 }, scale: { x: 12, y: 12, z: 12 } },
-    { y: window.innerHeight * 2.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: -3, z: 0 }, scale: { x: 5, y: 5, z: 5 } },
-    { y: window.innerHeight * 3.10, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
-    { y: window.innerHeight * 4.12, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
-    { y: window.innerHeight * 5.31, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
-    { y: window.innerHeight * 5.86, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
-    { y: window.innerHeight * 6.5, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } },
-    { y: window.innerHeight * 8, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -3.5, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
+// Define scroll-based positions using multipliers for consistent calculation
+const scrollPositionMultipliers = [
+    { multiplier: 0.0, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0.00, y: 3.5, z: 1.00 }, scale: { x: 5, y: 5, z: 5 } },
+    { multiplier: 1.2, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.5, z: 3 }, scale: { x: 12, y: 12, z: 12 } },
+    { multiplier: 2.35, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: -3, z: 0 }, scale: { x: 5, y: 5, z: 5 } },
+    { multiplier: 3.10, position: { x: -2, y: 0, z: 0 }, rotation: { x: 0, y: 0.20, z: 0 }, scale: { x: 35, y: 35, z: 35 } },
+    { multiplier: 4.12, position: { x: 4, y: 0, z: 1 }, rotation: { x: -0.74, y: 2.51, z: 0.63 }, scale: { x: 15, y: 15, z: 15 } },
+    { multiplier: 5.31, position: { x: -10.5, y: -1.5, z: 0 }, rotation: { x: -0.3, y: -0.1, z: 0 }, scale: { x: 25, y: 25, z: 25 } },
+    { multiplier: 5.86, position: { x: -2.5, y: 1, z: -0.5 }, rotation: { x: 2.90, y: 2.50, z: 2.00 }, scale: { x: 8, y: 8, z: 8 } },
+    { multiplier: 6.5, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -0.4, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } },
+    { multiplier: 8, position: { x: -2, y: 0, z: -0.5 }, rotation: { x: 2.9, y: -3.5, z: 0.1 }, scale: { x: 25, y: 25, z: 25 } }
 ];
 
-// Define scroll-based positions for red and white pills
-const redPillPositions = [
-    { y: window.innerHeight * 0.0, position: { x: -4, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: -0.5 }, scale: { x: 5.5, y: 5.5, z: 5.5 } },
-    { y: window.innerHeight * 0.35, position: { x: -30, y: 4, z: 0 }, rotation: { x: -1, y: -2, z: -2.5 }, scale: { x: 3, y: 3, z: 3 } }
+// Function to calculate scroll positions from multipliers
+function calculateScrollPositions() {
+    return scrollPositionMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale
+    }));
+}
+
+let scrollPositions = calculateScrollPositions();
+
+// Define red and white pill multipliers
+const redPillMultipliers = [
+    { multiplier: 0.0, position: { x: -4, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: -0.5 }, scale: { x: 5.5, y: 5.5, z: 5.5 } },
+    { multiplier: 0.35, position: { x: -30, y: 4, z: 0 }, rotation: { x: -1, y: -2, z: -2.5 }, scale: { x: 3, y: 3, z: 3 } }
 ];
 
-const whitePillPositions = [
-    { y: window.innerHeight * 0.0, position: { x: 0, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: 0.5 }, scale: { x: 6, y: 6, z: 6 } },
-    { y: window.innerHeight * 0.35, position: { x: 15, y: 4, z: 0 }, rotation: { x: 1, y: 2, z: 2.5 }, scale: { x: 3, y: 3, z: 3 } }
+const whitePillMultipliers = [
+    { multiplier: 0.0, position: { x: 0, y: 1, z: 0 }, rotation: { x: 0, y: 0, z: 0.5 }, scale: { x: 6, y: 6, z: 6 } },
+    { multiplier: 0.35, position: { x: 15, y: 4, z: 0 }, rotation: { x: 1, y: 2, z: 2.5 }, scale: { x: 3, y: 3, z: 3 } }
 ];
+
+let redPillPositions = redPillMultipliers.map(pos => ({
+    y: window.innerHeight * pos.multiplier,
+    position: pos.position,
+    rotation: pos.rotation,
+    scale: pos.scale
+}));
+
+let whitePillPositions = whitePillMultipliers.map(pos => ({
+    y: window.innerHeight * pos.multiplier,
+    position: pos.position,
+    rotation: pos.rotation,
+    scale: pos.scale
+}));
 
 // Function to initialize debug panel controls
 function initializeDebugPanel(currentSection) {
@@ -640,24 +666,44 @@ window.addEventListener('resize', function() {
     // Update mobile scale factor
     updateMobileScaleFactor();
 
-    // Update scroll positions based on new window height
-    scrollPositions[0].y = window.innerHeight * 0.0;
-    scrollPositions[1].y = window.innerHeight * 0.35;
-    scrollPositions[2].y = window.innerHeight * 1.32;
-    scrollPositions[3].y = window.innerHeight * 2.4;
-    scrollPositions[4].y = window.innerHeight * 3.32;
-    scrollPositions[5].y = window.innerHeight * 3.85;
+    // Recalculate all scroll positions based on new window height
+    scrollPositions = calculateScrollPositions();
 
-    redPillPositions[0].y = window.innerHeight * 0.0;
-    redPillPositions[1].y = window.innerHeight * 0.35;
+    redPillPositions = redPillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale
+    }));
 
-    whitePillPositions[0].y = window.innerHeight * 0.0;
-    whitePillPositions[1].y = window.innerHeight * 0.35;
+    whitePillPositions = whitePillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale
+    }));
 
     // Refresh GSAP ScrollTrigger if available
     if (typeof ScrollTrigger !== 'undefined') {
         ScrollTrigger.refresh();
     }
+});
+
+// Ensure scroll positions are calculated on load
+window.addEventListener('load', function() {
+    scrollPositions = calculateScrollPositions();
+    redPillPositions = redPillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale
+    }));
+    whitePillPositions = whitePillMultipliers.map(pos => ({
+        y: window.innerHeight * pos.multiplier,
+        position: pos.position,
+        rotation: pos.rotation,
+        scale: pos.scale
+    }));
 });
 
 // Start animation
