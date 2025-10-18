@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future - Male Contraceptive Pills</title>
+    <link rel="icon" type="image/x-icon" href="img/MaleContracepiveICO.ico">
+    <link rel="stylesheet" href="https://use.typekit.net/xcr5gla.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            font-family: 'neue-haas-grotesk-display', sans-serif;
+            overflow-x: hidden;
+            color: #ffffff;
+        }
+
+        /* Navigation */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 60px 10vw;
+            background: transparent;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: clamp(18px, 2vw, 32px);
+            letter-spacing: 2px;
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        nav .nav-left {
+            display: flex;
+            gap: clamp(40px, 8vw, 120px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        nav .nav-right {
+            display: flex;
+            gap: clamp(30px, 5vw, 80px);
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 10px;
+        }
+
+        nav a:hover {
+            color: #00d9ff;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pill-bottle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(100px, 15vw, 200px);
+            height: auto;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: clamp(32px, 6vw, 72px);
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.2;
+            letter-spacing: 3px;
+            max-width: 90%;
+            margin-top: 20vh;
+        }
+
+        /* Pills Section */
+        .pills-section {
+            position: relative;
+            min-height: 400vh;
+        }
+
+        .pill-item {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10vw;
+            overflow: hidden;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .pill-canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60vw;
+            height: 100vh;
+            flex-shrink: 0;
+        }
+
+        .pill-canvas canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .pill-image {
+            display: none;
+        }
+
+        .pill-content {
+            max-width: 600px;
+            margin-left: auto;
+            padding-left: 60px;
+        }
+
+        .section-header {
+            background: #ffffff;
+            color: #000000;
+            padding: 8px 15px;
+            font-size: clamp(20px, 2.5vw, 30px);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        .pill-content p {
+            font-size: clamp(16px, 1.5vw, 18px);
+            line-height: 1.8;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        /* Footer Section */
+        footer {
+            position: relative;
+            width: 100%;
+            background: transparent;
+            z-index: 100;
+            margin-top: 100px;
+            padding-bottom: 40px;
+        }
+
+        .learn-more {
+            font-size: 16px;
+            color: #ffffff;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ffffff;
+            text-align: center;
+        }
+
+        footer .links {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            background: transparent;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #00d9ff;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 30px 5vw;
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+
+            nav .nav-left,
+            nav .nav-right {
+                gap: 20px;
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 16px;
+            }
+
+            .pill-item {
+                flex-direction: column;
+                padding: 60px 20px;
+            }
+
+            .pill-canvas {
+                width: 100vw;
+                height: 50vh;
+                position: relative;
+            }
+
+            .pill-content {
+                padding-left: 0;
+                margin-left: 0;
+                margin-top: 30px;
+            }
+
+            footer .links {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px 0 40px 0;
+            }
+
+            footer a {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="/">HOME</a>
+            <a href="/the-facts">THE FACTS</a>
+        </div>
+        <div class="nav-right">
+            <a href="/change">THE FUTURE</a>
+            <a href="/get-involved">GET INVOLVED</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <img src="img/pillBottle.png" alt="Pill Bottle" class="pill-bottle">
+        <h1 class="hero-title">THE FUTURE OF THE<br>MALE PILL BIRTH CONTROL</h1>
+    </section>
+
+    <!-- Pills Section -->
+    <section class="pills-section">
+        <div class="pill-item" data-pill="blue">
+            <div class="pill-canvas" id="canvas-blue"></div>
+            <div class="pill-content">
+                <div class="section-header">1. INFORMATION</div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        </div>
+        <div class="pill-item" data-pill="green">
+            <div class="pill-canvas" id="canvas-green"></div>
+            <div class="pill-content">
+                <div class="section-header">2. AWARENESS</div>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+        </div>
+        <div class="pill-item" data-pill="white">
+            <div class="pill-canvas" id="canvas-white"></div>
+            <div class="pill-content">
+                <div class="section-header">3. EDUCATION</div>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+        </div>
+        <div class="pill-item" data-pill="red">
+            <div class="pill-canvas" id="canvas-red"></div>
+            <div class="pill-content">
+                <div class="section-header">4. ACTION</div>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="learn-more">Learn more below</div>
+        <div class="links">
+            <a href="/">HOME</a>
+            <a href="/the-facts">THE FACTS</a>
+            <a href="/change">CHANGE</a>
+            <a href="/get-involved">GET INVOLVED</a>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate pill bottle on load
+        gsap.from('.pill-bottle', {
+            y: -200,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'power3.out'
+        });
+
+        // Animate hero title
+        gsap.from('.hero-title', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            delay: 0.5,
+            ease: 'power3.out'
+        });
+
+        // Three.js setup for pills
+        const pillScenes = [];
+        const loader = new THREE.GLTFLoader();
+
+        // Pill configurations
+        const pillConfigs = [
+            {
+                id: 'canvas-blue',
+                model: 'assets/blueRound.gltf',
+                scale: { x: 10, y: 10, z: 10 },
+                startRotation: { x: -Math.PI / 2, y: 0, z: -Math.PI / 4 },
+                endRotation: { x: 0, y: 0, z: 2 },
+                startPosition: { x: -5, y: -1.5, z: 0 },
+                endPosition: { x: -0.5, y: 0, z: 0 }
+            },
+            {
+                id: 'canvas-green',
+                model: 'assets/pg2/greenpill.gltf',
+                scale: { x: 25, y: 25, z: 25 },
+                startRotation: { x: -Math.PI / 2, y: 0, z: -Math.PI / 4 },
+                endRotation: { x: 0, y: 0, z: 1 },
+                startPosition: { x: -5, y: -1, z: 0 },
+                endPosition: { x: -0.5, y: 0, z: 0 }
+            },
+            {
+                id: 'canvas-white',
+                model: 'assets/roundWhite.gltf',
+                scale: { x: 25, y: 25, z: 25 },
+                startRotation: { x: -Math.PI / 2, y: 0, z: -Math.PI / 4 },
+                endRotation: { x: 0, y: 0, z: 1 },
+                startPosition: { x: -5, y: -1, z: 0 },
+                endPosition: { x: -0.5, y: 0, z: 0 }
+            },
+            {
+                id: 'canvas-red',
+                model: 'assets/RedLong.gltf',
+                scale: { x: 8, y: 8, z: 8 },
+                startRotation: { x: -Math.PI / 2, y: 0, z: -Math.PI / 4 },
+                endRotation: { x: 0, y: 0, z: -0.7 },
+                startPosition: { x: -5, y: -1, z: 0 },
+                endPosition: { x: -0.5, y: 0, z: 0 }
+            }
+        ];
+
+        // Create a scene for each pill
+        pillConfigs.forEach((config, index) => {
+            const container = document.getElementById(config.id);
+            const rect = container.getBoundingClientRect();
+
+            // Scene setup
+            const scene = new THREE.Scene();
+            const aspect = rect.width / rect.height;
+            const camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+            camera.position.set(0, 0, 5);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(rect.width, rect.height);
+            renderer.setClearColor(0x000000, 0);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(2, 2, 3);
+            scene.add(directionalLight);
+
+            const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+            fillLight.position.set(-2, 0, -2);
+            scene.add(fillLight);
+
+            // Store scene data
+            const sceneData = {
+                scene,
+                camera,
+                renderer,
+                model: null,
+                startRotation: config.startRotation,
+                endRotation: config.endRotation,
+                startPosition: config.startPosition,
+                endPosition: config.endPosition
+            };
+
+            // Load model
+            loader.load(config.model, (gltf) => {
+                const model = gltf.scene;
+
+                // Setup materials
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.geometry) {
+                            child.geometry.computeVertexNormals();
+                        }
+                        if (child.material) {
+                            child.material.metalness = 0.2;
+                            child.material.roughness = 0.4;
+                        }
+                    }
+                });
+
+                // Scale and position from config
+                model.scale.set(config.scale.x, config.scale.y, config.scale.z);
+                model.position.set(config.startPosition.x, config.startPosition.y, config.startPosition.z);
+                model.rotation.set(config.startRotation.x, config.startRotation.y, config.startRotation.z);
+
+                scene.add(model);
+                sceneData.model = model;
+
+                // Initial render
+                renderer.render(scene, camera);
+            }, undefined, (error) => {
+                console.error('Error loading model:', config.model, error);
+            });
+
+            pillScenes.push(sceneData);
+        });
+
+        // Animate scenes
+        function animateScenes() {
+            pillScenes.forEach(sceneData => {
+                if (sceneData.renderer) {
+                    sceneData.renderer.render(sceneData.scene, sceneData.camera);
+                }
+            });
+            requestAnimationFrame(animateScenes);
+        }
+        animateScenes();
+
+        // Setup scroll animations
+        const pillItems = document.querySelectorAll('.pill-item');
+
+        pillItems.forEach((item, index) => {
+            const content = item.querySelector('.pill-content');
+            const sceneData = pillScenes[index];
+
+            // Content fade in
+            gsap.fromTo(content,
+                { opacity: 0, x: 50 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 70%',
+                        end: 'top 30%',
+                        scrub: 1
+                    }
+                }
+            );
+
+            // Pill animation based on scroll
+            ScrollTrigger.create({
+                trigger: item,
+                start: 'top 80%',
+                end: 'top 20%',
+                scrub: 1,
+                onUpdate: (self) => {
+                    if (sceneData.model) {
+                        const progress = self.progress;
+
+                        // Interpolate rotation
+                        sceneData.model.rotation.x = sceneData.startRotation.x + (sceneData.endRotation.x - sceneData.startRotation.x) * progress;
+                        sceneData.model.rotation.y = sceneData.startRotation.y + (sceneData.endRotation.y - sceneData.startRotation.y) * progress;
+                        sceneData.model.rotation.z = sceneData.startRotation.z + (sceneData.endRotation.z - sceneData.startRotation.z) * progress;
+
+                        // Interpolate position
+                        sceneData.model.position.x = sceneData.startPosition.x + (sceneData.endPosition.x - sceneData.startPosition.x) * progress;
+                        sceneData.model.position.y = sceneData.startPosition.y + (sceneData.endPosition.y - sceneData.startPosition.y) * progress;
+                        sceneData.model.position.z = sceneData.startPosition.z + (sceneData.endPosition.z - sceneData.startPosition.z) * progress;
+                    }
+                }
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            pillScenes.forEach((sceneData, index) => {
+                const container = document.getElementById(pillConfigs[index].id);
+                const rect = container.getBoundingClientRect();
+
+                sceneData.camera.aspect = rect.width / rect.height;
+                sceneData.camera.updateProjectionMatrix();
+                sceneData.renderer.setSize(rect.width, rect.height);
+            });
+        });
+
+        // Footer animation
+        gsap.from('.learn-more', {
+            opacity: 0,
+            y: 30,
+            scrollTrigger: {
+                trigger: 'footer',
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        gsap.from('footer .links a', {
+            opacity: 0,
+            y: 30,
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: 'footer',
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -15,10 +15,10 @@
   status = 200
 
 # Future redirect for CHANGE page
-# [[redirects]]
-#   from = "/change"
-#   to = "/change.html"
-#   status = 200
+ [[redirects]]
+   from = "/change"
+   to = "/change.html"
+   status = 200
 
 # Serve index.html for root
 [[redirects]]
